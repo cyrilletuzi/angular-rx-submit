@@ -13,6 +13,9 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve",
+    "paths": {
+      "angular-rx-submit": ["./dist/lib"]
+    },
     // Additional configuration for explicit type imports management
     "verbatimModuleSyntax": true,
     // Additional configuration for better interoperability with tools
@@ -33,5 +36,13 @@
       "defaultCategory": "error"
     }
   },
-  "files": []
+  "files": [],
+  "references": [
+    {
+      "path": "./lib/tsconfig.lib.json"
+    },
+    {
+      "path": "./lib/tsconfig.spec.json"
+    }
+  ]
 }
