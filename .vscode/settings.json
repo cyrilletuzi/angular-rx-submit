@@ -7,6 +7,11 @@
   // Formatting rules
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
   // Regroup related files in explorer, to reduce folders nesting
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
