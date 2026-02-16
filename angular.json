@@ -29,6 +29,12 @@
           "options": {
             "tsConfig": "lib/tsconfig.spec.json"
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["lib/**/*.ts", "lib/**/*.html"]
+          }
         }
       }
     }
