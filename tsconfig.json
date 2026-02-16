@@ -16,7 +16,10 @@
     // Additional configuration for explicit type imports management
     "verbatimModuleSyntax": true,
     // Additional configuration for better interoperability with tools
-    "erasableSyntaxOnly": true
+    "erasableSyntaxOnly": true,
+    // Additional configuration for type safety
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
