@@ -10,16 +10,25 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
-    "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    // Additional configuration for explicit type imports management
+    "verbatimModuleSyntax": true,
+    // Additional configuration for better interoperability with tools
+    "erasableSyntaxOnly": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    // Additional configuration to enforce standalone components
+    "strictStandalone": true,
+    // Additional configuration to enforce Angular diagnostics as compilation errors
+    "extendedDiagnostics": {
+      "defaultCategory": "error"
+    }
   },
   "files": []
 }
