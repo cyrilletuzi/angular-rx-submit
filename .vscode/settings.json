@@ -1,0 +1,23 @@
+{
+  "typescript.preferences.autoImportFileExcludePatterns": ["./dist"],
+  // Use project TypeScript version
+  "typescript.tsdk": "node_modules/typescript/lib",
+  // Disable random autocomplete for stricter code
+  "editor.wordBasedSuggestions": "off",
+  // Formatting rules
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // Regroup related files in explorer, to reduce folders nesting
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.css, ${capture}.html, ${capture}.spec.ts"
+  },
+  // Inlay hints (display type information when already known)
+  "typescript.inlayHints.variableTypes.enabled": true,
+  "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
+  "typescript.inlayHints.parameterTypes.enabled": true,
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "typescript.inlayHints.enumMemberValues.enabled": true,
+  "typescript.inlayHints.parameterNames.enabled": "all",
+  "typescript.inlayHints.variableTypes.suppressWhenTypeMatchesName": false
+}
