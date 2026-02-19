@@ -38,7 +38,10 @@ describe('rxSubmit ', () => {
           asyncScheduler,
         );
 
-        rxSubmit(componentInstance.form, () => observable, { injector }).subscribe({
+        rxSubmit(componentInstance.form, {
+          action: () => observable,
+          injector,
+        }).subscribe({
           next: (result) => {
             success = result;
           },
@@ -60,7 +63,7 @@ describe('rxSubmit ', () => {
 
         const observable: Observable<TreeValidationResult> = scheduled(of(null), asyncScheduler);
 
-        rxSubmit(componentInstance.form, () => observable, { injector }).subscribe({
+        rxSubmit(componentInstance.form, { action: () => observable, injector }).subscribe({
           next: (result) => {
             success = result;
           },
@@ -88,9 +91,7 @@ describe('rxSubmit ', () => {
           asyncScheduler,
         );
 
-        rxSubmit(componentInstance.form, () => observable, {
-          injector,
-        }).subscribe({
+        rxSubmit(componentInstance.form, { action: () => observable, injector }).subscribe({
           next: (result) => {
             success = result;
           },
@@ -123,7 +124,7 @@ describe('rxSubmit ', () => {
           asyncScheduler,
         );
 
-        rxSubmit(componentInstance.form, () => observable, { injector }).subscribe({
+        rxSubmit(componentInstance.form, { action: () => observable, injector }).subscribe({
           next: (result) => {
             success = result;
           },
@@ -149,7 +150,7 @@ describe('rxSubmit ', () => {
           asyncScheduler,
         );
 
-        rxSubmit(componentInstance.form, () => observable, { injector }).subscribe({
+        rxSubmit(componentInstance.form, { action: () => observable, injector }).subscribe({
           next: () => {
             reject();
           },
@@ -170,7 +171,7 @@ describe('rxSubmit ', () => {
       new Promise((resolve, reject) => {
         const observable: Observable<TreeValidationResult> = of(undefined).pipe(delay(2000));
 
-        rxSubmit(componentInstance.form, () => observable, { injector }).subscribe({
+        rxSubmit(componentInstance.form, { action: () => observable, injector }).subscribe({
           next: () => {
             reject();
           },
@@ -209,7 +210,7 @@ describe('rxSubmit ', () => {
               of(undefined),
               asyncScheduler,
             );
-            this.submitObservable = rxSubmit(this.form, () => observable);
+            this.submitObservable = rxSubmit(this.form, { action: () => observable });
           }
 
           save(): void {
@@ -249,7 +250,7 @@ describe('rxSubmit ', () => {
 
           constructor() {
             const observable: Observable<TreeValidationResult> = of(undefined).pipe(delay(2000));
-            this.submitObservable = rxSubmit(this.form, () => observable);
+            this.submitObservable = rxSubmit(this.form, { action: () => observable });
           }
 
           save(): void {
@@ -293,7 +294,7 @@ describe('rxSubmit ', () => {
             asyncScheduler,
           );
           expect(() => {
-            rxSubmit(this.form, () => observable).subscribe();
+            rxSubmit(this.form, { action: () => observable }).subscribe();
           }).toThrowError(/NG0203/);
         }
       }

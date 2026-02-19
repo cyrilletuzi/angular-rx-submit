@@ -42,7 +42,8 @@ export class EditPage {
   protected readonly form = form(this.formModel);
 
   protected save(): void {
-    rxSubmit(this.form, (submittedForm) => someObservable(submittedForm().value()), {
+    rxSubmit(this.form, {
+      action: (submittedForm) => someObservable(submittedForm().value()),
       injector: this.injector, // ⬅️
     }).subscribe();
   }
@@ -59,9 +60,9 @@ export class EditPage {
   private readonly formModel = signal({ username: '' });
   protected readonly form = form(this.formModel);
 
-  private readonly submitObservable = rxSubmit(this.form, (submittedForm) =>
-    someObservable(submittedForm().value()),
-  );
+  private readonly submitObservable = rxSubmit(this.form, {
+    action: (submittedForm) => someObservable(submittedForm().value()),
+  });
 
   protected save(): void {
     submitObservable.subscribe();
@@ -79,12 +80,14 @@ But **you _DO_ need to subscribe**, even if you do not have something specific t
 
 ```ts
 // ❌ Nothing happens
-rxSubmit(this.form, () => (submittedForm) => someObservable(submittedForm().value()), {
+rxSubmit(this.form, () => {
+  action: (submittedForm) => someObservable(submittedForm().value()),
   injector: this.injector,
 });
 
 // ✅ Triggers submission
-rxSubmit(this.form, () => (submittedForm) => someObservable(submittedForm().value()), {
+rxSubmit(this.form, {
+  action: (submittedForm) => someObservable(submittedForm().value()),
   injector: this.injector,
 }).subscribe();
 ```
@@ -94,7 +97,8 @@ rxSubmit(this.form, () => (submittedForm) => someObservable(submittedForm().valu
 As for any Observable, handling errors is recommended. If the Observable you provide throws, the error will be propagated by `rxSubmit()`. The most common case is the HTTP request failing.
 
 ```ts
-rxSubmit(this.form, () => (submittedForm) => someObservable(submittedForm().value()), {
+rxSubmit(this.form, {
+  action: () => (submittedForm) => someObservable(submittedForm().value()),
   injector: this.injector,
 }).subscribe({
   next: (success) => {
@@ -151,7 +155,8 @@ The `rxSubmit()` / `submit()` purpose is only to manage the form submission prog
 Subsequent actions should be done in the `next` / `then()` callback:
 
 ```ts
-rxSubmit(this.form, () => (submittedForm) => someObservable(submittedForm().value()), {
+rxSubmit(this.form, {
+  action: () => (submittedForm) => someObservable(submittedForm().value()),
   injector: this.injector,
 }).subscribe({
   next: (success) => {
@@ -196,7 +201,9 @@ export class EditPage {
   protected readonly form = form(this.formModel);
 
   protected save(): void {
-    submit(this.form, async (submittedForm) => await somePromise(submittedForm().value()))
+    submit(this.form, {
+      action: async (submittedForm) => await somePromise(submittedForm().value()),
+    })
       .then((success) => {
         if (success) {
           this.router.navigate(['/some/other/page']).catch(() => {});
@@ -241,15 +248,15 @@ export class EditPage {
   protected save(): void {
     from(
       submit(
-        this.form,
-        async (submittedForm) =>
+        this.form, {
+          action: async (submittedForm) =>
           await firstValueFrom(
             someObservable(submittedForm().value()).pipe(takeUntilDestroyed(this.destroyRef)),
             {
               defaultValue: undefined,
             },
           ),
-      ),
+      }),
     ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (success) => {
         if (success) {
@@ -336,14 +343,11 @@ export class EditPage {
   protected readonly form = form(formModel);
 
   protected save(): void {
-    rxSubmit(
-      this.form,
-      (submittedForm) =>
+    rxSubmit(this.form, {
+      action: (submittedForm) =>
         this.httpApi.save(submittedForm().value()).pipe(map(mapApiResponseToTreeValidationResult)),
-      {
-        injector: this.injector,
-      },
-    ).subscribe({
+      injector: this.injector,
+    }).subscribe({
       next: (success) => {
         if (success) {
           this.router.navigate(['/some/page']).catch(() => {});
