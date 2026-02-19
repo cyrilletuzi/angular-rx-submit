@@ -163,6 +163,22 @@ rxSubmit(this.form, () => (submittedForm) => someObservable(submittedForm().valu
 });
 ```
 
+### Multiple submissions
+
+As the official `submit()`, do not trigger `rxSubmit()` in parallel, to avoid race issues. So be sure to block submission when one is already in progress:
+
+```ts
+@Component({
+  template: `<form (submit)="save()">
+    <button type="submit" [disabled]="form().submitting()">Save</button>
+  </form>`,
+})
+export class EditPage {
+  private readonly formModel = signal({ username: '' });
+  protected readonly form = form(this.formModel);
+}
+```
+
 ## Problems solved
 
 ### Cancellation
