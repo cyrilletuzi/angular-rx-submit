@@ -14,10 +14,10 @@ This library provides the function `rxSubmit()`, on Observable-based equivalent 
 - RxJS version >= 7.4.0 [^2]
 
 > [!NOTE]
-> Angular versions 21.0 and 21.1 are not supported, as this library requires a new `submit()` feature introduced in version 21.2.
+> Angular versions 21.0 and 21.1 are _not_ supported, as this library requires a new `submit()` feature introduced in version 21.2.
 
 > [!NOTE]
-> RxJS version 6 is not supported.
+> RxJS version 6 is _not_ supported.
 
 ## Getting started
 
@@ -25,29 +25,31 @@ This library provides the function `rxSubmit()`, on Observable-based equivalent 
 
 ## Injection context
 
-One advantage of `rxSubmit()` is automatic cancellation (if the user leaves the page). But for that to work, like many other Angular functions (`takeUntilDestroyed()`, `toSignal()`...), it requires an injection context. `rxSubmit()` follows the same pattern as those other similar Angular functions, with 2 options:
+One advantage of `rxSubmit()` is automatic cancellation (if the user leaves the page).
 
-- provide an `Injector`
+But for that to work, like many other Angular functions (`takeUntilDestroyed()`, `toSignal()`...), **it requires an injection context**. `rxSubmit()` follows the same pattern as those other similar Angular functions, with 2 options:
+
+- **provide an `Injector`**
 
 ```ts
 @Component({
   template: ` <form (submit)="save()"></form> `,
 })
 export class EditPage {
-  private readonly injector = inject(Injector); // here
+  private readonly injector = inject(Injector); // ⬅️
 
   private readonly formModel = signal({ username: '' });
   protected readonly form = form(this.formModel);
 
   protected save(): void {
     rxSubmit(this.form, (submittedForm) => someObservable(submittedForm().value()), {
-      injector: this.injector, // here
+      injector: this.injector, // ⬅️
     }).subscribe();
   }
 }
 ```
 
-- use `rxSubmit()` inside an injection context (field initializer, constructor...)
+- or use `rxSubmit()` inside an [injection context](https://angular.dev/guide/di/dependency-injection-context) (field initializer, constructor...)
 
 ```ts
 @Component({
@@ -67,17 +69,21 @@ export class EditPage {
 }
 ```
 
+**Using `rxSubmit()` outside an injection context and without providing an injector will throw the [`NG0203` error](https://angular.dev/errors/NG0203).**
+
 ## Subscription
 
-This is not specific to `rxSubmit()`, but as for any Observable, subscribing is mandatory:
+You do _not_ need to unsubscribe, `rxSubmit()` does it for you via the injection context (see above).
+
+But **you _DO_ need to subscribe**, even if you do not have something specific to do after submission (because it is how all `Observable`s work).
 
 ```ts
-// Nothing happens
+// ❌ Nothing happens
 rxSubmit(this.form, () => (submittedForm) => someObservable(submittedForm().value()), {
   injector: this.injector,
 });
 
-// Triggers submission
+// ✅ Triggers submission
 rxSubmit(this.form, () => (submittedForm) => someObservable(submittedForm().value()), {
   injector: this.injector,
 }).subscribe();
@@ -113,7 +119,7 @@ As for the official Angular `submit()`, the Observable you provide to `rxSubmit(
 
 - `null`, `undefined` or `void` if there is no validation error
 - a `ValidationError.WithOptionalFieldTree` if there is a validation error
-- one array of `ValidationError.WithOptionalFieldTree` if there are multiple validations errors
+- an array of `ValidationError.WithOptionalFieldTree` if there are multiple validation errors
 
 ```ts
 interface ApiResponse {
