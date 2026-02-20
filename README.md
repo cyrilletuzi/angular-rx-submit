@@ -246,17 +246,16 @@ export class EditPage {
   protected readonly form = form(this.formModel);
 
   protected save(): void {
-    from(
-      submit(
-        this.form, {
-          action: async (submittedForm) =>
-          await firstValueFrom(
-            someObservable(submittedForm().value()).pipe(takeUntilDestroyed(this.destroyRef)),
-            {
-              defaultValue: undefined,
-            },
-          ),
-      }),
+    defer(() => submit(
+      this.form, {
+        action: async (submittedForm) =>
+        await firstValueFrom(
+          someObservable(submittedForm().value()).pipe(takeUntilDestroyed(this.destroyRef)),
+          {
+            defaultValue: undefined,
+          },
+        ),
+    }),
     ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (success) => {
         if (success) {

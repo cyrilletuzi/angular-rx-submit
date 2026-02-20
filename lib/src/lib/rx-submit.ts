@@ -6,7 +6,7 @@ import {
   type FormSubmitOptions,
   type TreeValidationResult,
 } from '@angular/forms/signals';
-import { firstValueFrom, from, type Observable } from 'rxjs';
+import { defer, firstValueFrom, type Observable } from 'rxjs';
 
 /**
  * Options that can be specified when submitting a form with `rxSubmit()`.
@@ -110,8 +110,10 @@ export function rxSubmit<TModel>(
     return treeValidationResult;
   };
 
-  /* `submit()` the form and transform the Promise return into an Observable */
-  const submitObservable: Observable<boolean> = from(
+  /* `submit()` the form and transform the Promise return into a lazy Observable.
+   * It is important to use `defer()` so that the submission happens only when the Observable is subscribed to;
+   * otherwise with `from()`, `submit()` would be called immediately. */
+  const submitObservable: Observable<boolean> = defer(() =>
     submit(form, {
       action: actionCallback,
       ...(options.onInvalid ? { onInvalid: options.onInvalid } : {}),
