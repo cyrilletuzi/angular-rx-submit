@@ -23,6 +23,36 @@ This library provides the function `rxSubmit()`, on Observable-based equivalent 
 
 - `npm install angular-rx-submit`
 
+```ts
+import { rxSubmit } from 'angular-rx-submit';
+
+@Component({
+  template: ` <form (submit)="save()"></form> `,
+})
+export class EditPage {
+  private readonly injector = inject(Injector);
+
+  private readonly formModel = signal({ userName: '' });
+  protected readonly form = form(this.formModel);
+
+  protected save(): void {
+    rxSubmit(this.form, {
+      action: (submittedForm) => someObservable(submittedForm().value()),
+      injector: this.injector,
+    }).subscribe({
+      next: (success) => {
+        if (success) {
+          // Manage success here
+        }
+      },
+      error: (error: unknown) => {
+        // Manage error here
+      },
+    });
+  }
+}
+```
+
 ## Injection context
 
 One advantage of `rxSubmit()` is automatic cancellation (if the user leaves the page).
@@ -300,13 +330,16 @@ interface ApiResponse {
   readonly error?: { message: string };
 }
 
+/**
+ * Transforms the API response into a `TreeValidationResult`, which is what is expected by the Angular `submit()`
+ */
 export function mapApiResponseToTreeValidationResult(response: ApiResponse): TreeValidationResult {
   return response.success
-    ? null
+    ? null // `null`, `undefined` or `void` if no error
     : {
         kind: 'apiError',
         message: response.error?.message,
-      };
+      }; // a `ValidationError.WithOptionalFieldTree`, or an array of that
 }
 
 @Injectable({
@@ -334,7 +367,7 @@ export class Api {
 export class EditPage {
   private readonly injector = inject(Injector);
   private readonly httpApi = inject(HttpApi);
-  private readonly router = inject(router);
+  private readonly router = inject(Router);
 
   private readonly formModel = signal<EditModel>({
     username: '',
@@ -344,6 +377,7 @@ export class EditPage {
   protected save(): void {
     rxSubmit(this.form, {
       action: (submittedForm) =>
+        // Like the `submit()` action Promise, the Observable must return a `TreeValidationResult`
         this.httpApi.save(submittedForm().value()).pipe(map(mapApiResponseToTreeValidationResult)),
       injector: this.injector,
     }).subscribe({
