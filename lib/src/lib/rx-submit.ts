@@ -84,43 +84,27 @@ export function rxSubmit<TModel>(
   if (!options.destroyRef) {
     assertInInjectionContext(rxSubmit);
   }
-
   const destroyRef: DestroyRef = options.destroyRef ?? inject(DestroyRef);
-
-  /* Prepare the Promise-based action callback */
-  const actionCallback = async (
-    field: FieldTree<TModel>,
-    detail: {
-      root: FieldTree<unknown>;
-      submitted: FieldTree<TModel>;
-    },
-  ): Promise<TreeValidationResult> => {
-    /* Pass the form to the user-provided and Observable-based action callback */
-    const actionObservable: Observable<TreeValidationResult> = options
-      .action(field, detail)
-      .pipe(takeUntilDestroyed(destroyRef));
-
-    /* Transform the action Observable into a Promise */
-    const treeValidationResult: TreeValidationResult = await firstValueFrom(actionObservable, {
-      /* If `takeUntilDestroyed()` happens, returns `undefined` instead of throwing an `EmptyError` */
-      defaultValue: undefined,
-    });
-
-    return treeValidationResult;
-  };
 
   /* `submit()` the form and transform the Promise return into a lazy Observable.
    * It is important to use `defer()` so that the submission happens only when the Observable is subscribed to;
    * otherwise with `from()`, `submit()` would be called immediately. */
-  const submitObservable: Observable<boolean> = defer(() =>
+  return defer(() =>
     submit(form, {
-      action: actionCallback,
+      action: async (submittedForm, detail) =>
+        /* Transform the action Observable into a Promise */
+        await firstValueFrom(
+          /* Pass the form to the user-provided and Observable-based action callback */
+          options.action(submittedForm, detail).pipe(takeUntilDestroyed(destroyRef)),
+          {
+            /* If `takeUntilDestroyed()` happens, returns `undefined` instead of throwing an `EmptyError` */
+            defaultValue: undefined,
+          },
+        ),
       ...(options.onInvalid ? { onInvalid: options.onInvalid } : {}),
       ...(options.ignoreValidators !== undefined
         ? { ignoreValidators: options.ignoreValidators }
         : {}),
     }),
   ).pipe(takeUntilDestroyed(destroyRef));
-
-  return submitObservable;
 }
