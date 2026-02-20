@@ -1,41 +1,10 @@
 import { assertInInjectionContext, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  submit,
-  type FieldTree,
-  type FormSubmitOptions,
-  type TreeValidationResult,
-} from '@angular/forms/signals';
+import { submit, type FieldTree } from '@angular/forms/signals';
 import { defer, firstValueFrom, type Observable } from 'rxjs';
+import type { CommonRxFormSubmitOptions } from './rx-form-submit-options';
 
-/**
- * Options that can be specified when submitting a form with `rxSubmit()`.
- *
- * @experimental 21.2.0
- */
-interface RxSubmitOptions<TModel> extends Pick<
-  FormSubmitOptions<unknown, TModel>,
-  'onInvalid' | 'ignoreValidators'
-> {
-  /**
-   * Function to run when submitting the form data (when form is valid).
-   *
-   * @param field The submitted field
-   * @param detail An object containing the root field of the submitted form as well as the submitted field itself
-   */
-  action: (
-    field: FieldTree<TModel>,
-    detail: {
-      root: FieldTree<unknown>;
-      submitted: FieldTree<TModel>;
-    },
-  ) => Observable<TreeValidationResult>;
-  /**
-   * The `DestroyRef` representing the current context. This can be passed explicitly to use `rxSubmit()`
-   * outside of an injection context. Otherwise, the current `DestroyRef` is injected.
-   */
-  destroyRef?: DestroyRef;
-}
+export interface RxSubmitOptions<TModel> extends CommonRxFormSubmitOptions<unknown, TModel> {}
 
 /**
  * Submits a given `FieldTree` using the given action function and applies any submission errors
@@ -84,7 +53,8 @@ export function rxSubmit<TModel>(
   if (!options.destroyRef) {
     assertInInjectionContext(rxSubmit);
   }
-  const destroyRef: DestroyRef = options.destroyRef ?? inject(DestroyRef);
+
+  const { action, destroyRef = inject(DestroyRef), ...otherOptions } = options;
 
   /* `submit()` the form and transform the Promise return into a lazy Observable.
    * It is important to use `defer()` so that the submission happens only when the Observable is subscribed to;
@@ -95,16 +65,13 @@ export function rxSubmit<TModel>(
         /* Transform the action Observable into a Promise */
         await firstValueFrom(
           /* Pass the form to the user-provided and Observable-based action callback */
-          options.action(submittedForm, detail).pipe(takeUntilDestroyed(destroyRef)),
+          action(submittedForm, detail).pipe(takeUntilDestroyed(destroyRef)),
           {
             /* If `takeUntilDestroyed()` happens, returns `undefined` instead of throwing an `EmptyError` */
             defaultValue: undefined,
           },
         ),
-      ...(options.onInvalid ? { onInvalid: options.onInvalid } : {}),
-      ...(options.ignoreValidators !== undefined
-        ? { ignoreValidators: options.ignoreValidators }
-        : {}),
+      ...otherOptions,
     }),
   ).pipe(takeUntilDestroyed(destroyRef));
 }
