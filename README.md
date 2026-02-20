@@ -30,7 +30,7 @@ import { rxSubmit } from 'angular-rx-submit';
   template: ` <form (submit)="save()"></form> `,
 })
 export class EditPage {
-  private readonly injector = inject(Injector);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly formModel = signal({ userName: '' });
   protected readonly form = form(this.formModel);
@@ -38,7 +38,7 @@ export class EditPage {
   protected save(): void {
     rxSubmit(this.form, {
       action: (submittedForm) => someObservable(submittedForm().value()),
-      injector: this.injector,
+      destroyRef: this.destroyRef,
     }).subscribe({
       next: (success) => {
         if (success) {
@@ -59,14 +59,14 @@ One advantage of `rxSubmit()` is automatic cancellation (if the user leaves the 
 
 But for that to work, like many other Angular functions (`takeUntilDestroyed()`, `toSignal()`...), **it requires an injection context**. `rxSubmit()` follows the same pattern as those other similar Angular functions, with 2 options:
 
-- **provide an `Injector`**
+- **provide a `DestroyRef`**
 
 ```ts
 @Component({
   template: ` <form (submit)="save()"></form> `,
 })
 export class EditPage {
-  private readonly injector = inject(Injector); // ⬅️
+  private readonly destroyRef = inject(DestroyRef); // ⬅️
 
   private readonly formModel = signal({ username: '' });
   protected readonly form = form(this.formModel);
@@ -74,7 +74,7 @@ export class EditPage {
   protected save(): void {
     rxSubmit(this.form, {
       action: (submittedForm) => someObservable(submittedForm().value()),
-      injector: this.injector, // ⬅️
+      destroyRef: this.destroyRef, // ⬅️
     }).subscribe();
   }
 }
@@ -100,7 +100,7 @@ export class EditPage {
 }
 ```
 
-**Using `rxSubmit()` outside an injection context and without providing an injector will throw the [`NG0203` error](https://angular.dev/errors/NG0203).**
+**Using `rxSubmit()` outside an injection context and without providing a `DestroyRef` will throw the [`NG0203` error](https://angular.dev/errors/NG0203).**
 
 ## Subscription
 
@@ -112,13 +112,13 @@ But **you _DO_ need to subscribe**, even if you do not have something specific t
 // ❌ Nothing happens
 rxSubmit(this.form, () => {
   action: (submittedForm) => someObservable(submittedForm().value()),
-  injector: this.injector,
+  destroyRef: this.destroyRef,
 });
 
 // ✅ Triggers submission
 rxSubmit(this.form, {
   action: (submittedForm) => someObservable(submittedForm().value()),
-  injector: this.injector,
+  destroyRef: this.destroyRef,
 }).subscribe();
 ```
 
@@ -129,7 +129,7 @@ As for any Observable, handling errors is recommended. If the Observable you pro
 ```ts
 rxSubmit(this.form, {
   action: () => (submittedForm) => someObservable(submittedForm().value()),
-  injector: this.injector,
+  destroyRef: this.destroyRef,
 }).subscribe({
   next: (success) => {
     if (success) {
@@ -187,7 +187,7 @@ Subsequent actions should be done in the `next` / `then()` callback:
 ```ts
 rxSubmit(this.form, {
   action: () => (submittedForm) => someObservable(submittedForm().value()),
-  injector: this.injector,
+  destroyRef: this.destroyRef,
 }).subscribe({
   next: (success) => {
     if (success) {
@@ -365,7 +365,7 @@ export class Api {
   `,
 })
 export class EditPage {
-  private readonly injector = inject(Injector);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly httpApi = inject(HttpApi);
   private readonly router = inject(Router);
 
@@ -379,7 +379,7 @@ export class EditPage {
       action: (submittedForm) =>
         // Like the `submit()` action Promise, the Observable must return a `TreeValidationResult`
         this.httpApi.save(submittedForm().value()).pipe(map(mapApiResponseToTreeValidationResult)),
-      injector: this.injector,
+      destroyRef: this.destroyRef,
     }).subscribe({
       next: (success) => {
         if (success) {

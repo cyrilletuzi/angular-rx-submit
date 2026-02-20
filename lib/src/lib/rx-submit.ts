@@ -1,4 +1,4 @@
-import { assertInInjectionContext, DestroyRef, inject, type Injector } from '@angular/core';
+import { assertInInjectionContext, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   submit,
@@ -31,11 +31,10 @@ interface RxSubmitOptions<TModel> extends Pick<
     },
   ) => Observable<TreeValidationResult>;
   /**
-   * `Injector` which will provide the `DestroyRef` used to clean up the Observable subscription.
-   *
-   * If this is not provided, a `DestroyRef` will be retrieved from the current injection context.
+   * The `DestroyRef` representing the current context. This can be passed explicitly to use `rxSubmit()`
+   * outside of an injection context. Otherwise, the current `DestroyRef` is injected.
    */
-  injector?: Injector;
+  destroyRef?: DestroyRef;
 }
 
 /**
@@ -82,11 +81,11 @@ export function rxSubmit<TModel>(
   form: FieldTree<TModel>,
   options: RxSubmitOptions<TModel>,
 ): Observable<boolean> {
-  if (!options.injector) {
+  if (!options.destroyRef) {
     assertInInjectionContext(rxSubmit);
   }
 
-  const destroyRef: DestroyRef = options.injector?.get(DestroyRef) ?? inject(DestroyRef);
+  const destroyRef: DestroyRef = options.destroyRef ?? inject(DestroyRef);
 
   /* Prepare the Promise-based action callback */
   const actionCallback = async (

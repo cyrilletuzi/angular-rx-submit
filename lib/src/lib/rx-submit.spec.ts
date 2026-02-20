@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/prefer-promise-reject-errors */
-import { Component, DestroyRef, inject, Injector, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { form, type TreeValidationResult } from '@angular/forms/signals';
 import { asyncScheduler, delay, Observable, of, scheduled, throwError } from 'rxjs';
@@ -7,12 +7,12 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { rxSubmit } from './rx-submit';
 
 describe('rxSubmit ', () => {
-  describe('with explicit injector', () => {
+  describe('with explicit DestroyRef', () => {
     @Component({
       template: '',
     })
     class TestComponent {
-      readonly injector = inject(Injector);
+      readonly destroyRef = inject(DestroyRef);
       private readonly formModel = signal({
         test: '',
       });
@@ -21,12 +21,12 @@ describe('rxSubmit ', () => {
 
     let componentFixture: ComponentFixture<TestComponent>;
     let componentInstance: TestComponent;
-    let injector: Injector;
+    let destroyRef: DestroyRef;
 
     beforeEach(() => {
       componentFixture = TestBed.createComponent(TestComponent);
       componentInstance = componentFixture.componentInstance;
-      injector = componentInstance.injector;
+      destroyRef = componentInstance.destroyRef;
     });
 
     it('should succeed when returning undefined', () =>
@@ -40,7 +40,7 @@ describe('rxSubmit ', () => {
 
         rxSubmit(componentInstance.form, {
           action: () => observable,
-          injector,
+          destroyRef,
         }).subscribe({
           next: (result) => {
             success = result;
@@ -63,7 +63,7 @@ describe('rxSubmit ', () => {
 
         const observable: Observable<TreeValidationResult> = scheduled(of(null), asyncScheduler);
 
-        rxSubmit(componentInstance.form, { action: () => observable, injector }).subscribe({
+        rxSubmit(componentInstance.form, { action: () => observable, destroyRef }).subscribe({
           next: (result) => {
             success = result;
           },
@@ -91,7 +91,7 @@ describe('rxSubmit ', () => {
           asyncScheduler,
         );
 
-        rxSubmit(componentInstance.form, { action: () => observable, injector }).subscribe({
+        rxSubmit(componentInstance.form, { action: () => observable, destroyRef }).subscribe({
           next: (result) => {
             success = result;
           },
@@ -124,7 +124,7 @@ describe('rxSubmit ', () => {
           asyncScheduler,
         );
 
-        rxSubmit(componentInstance.form, { action: () => observable, injector }).subscribe({
+        rxSubmit(componentInstance.form, { action: () => observable, destroyRef }).subscribe({
           next: (result) => {
             success = result;
           },
@@ -150,7 +150,7 @@ describe('rxSubmit ', () => {
           asyncScheduler,
         );
 
-        rxSubmit(componentInstance.form, { action: () => observable, injector }).subscribe({
+        rxSubmit(componentInstance.form, { action: () => observable, destroyRef }).subscribe({
           next: () => {
             reject();
           },
@@ -171,7 +171,7 @@ describe('rxSubmit ', () => {
       new Promise((resolve, reject) => {
         const observable: Observable<TreeValidationResult> = of(undefined).pipe(delay(2000));
 
-        rxSubmit(componentInstance.form, { action: () => observable, injector }).subscribe({
+        rxSubmit(componentInstance.form, { action: () => observable, destroyRef }).subscribe({
           next: () => {
             reject();
           },
@@ -179,8 +179,7 @@ describe('rxSubmit ', () => {
             reject();
           },
           complete: () => {
-            const destroyed = injector.get(DestroyRef).destroyed;
-            expect(destroyed).toBe(true);
+            expect(destroyRef.destroyed).toBe(true);
 
             resolve(undefined);
           },
@@ -278,7 +277,7 @@ describe('rxSubmit ', () => {
   });
 
   describe('outside injection context', () => {
-    it('should throw if outside injection context and no injector is provided', () => {
+    it('should throw if outside injection context and no DestroyRef is provided', () => {
       @Component({
         template: '',
       })
