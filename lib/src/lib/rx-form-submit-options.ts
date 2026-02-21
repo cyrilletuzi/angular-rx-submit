@@ -23,8 +23,8 @@ export function rxFormSubmitOptions<TModel>(
       firstValueFrom(
         action(form, detail).pipe(
           takeUntilDestroyed(destroyRef),
-          tap(() => {
-            if (onSuccess && form().valid()) {
+          tap((treeValidationResult) => {
+            if (onSuccess && !treeValidationResult) {
               onSuccess();
             }
           }),
