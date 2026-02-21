@@ -88,13 +88,6 @@ module.exports = defineConfig([
           allowWithDecorator: true, // some Angular classes can be empty
         },
       ],
-      // Loosen some annoying and inadequate no unused rules
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          ignoreRestSiblings: true,
-        },
-      ],
       // Enforce Angular good practices
       '@angular-eslint/consistent-component-styles': 'error',
       '@angular-eslint/sort-lifecycle-methods': 'error',

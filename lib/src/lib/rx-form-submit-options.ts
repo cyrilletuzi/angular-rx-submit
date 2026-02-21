@@ -1,32 +1,45 @@
-import type { DestroyRef } from '@angular/core';
-import type { FieldTree, FormSubmitOptions, TreeValidationResult } from '@angular/forms/signals';
-import type { Observable } from 'rxjs';
+import { assertInInjectionContext } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import type { FormSubmitOptions } from '@angular/forms/signals';
+import { catchError, firstValueFrom, of, tap } from 'rxjs';
+import type { RxCommonFormSubmitOptions } from './rx-common-form-submit-options';
 
-/**
- * Options that can be specified when submitting a form with `rxSubmit()`.
- *
- * @experimental 21.2.0
- */
-export interface CommonRxFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
-  FormSubmitOptions<TRootModel, TSubmittedModel>,
-  'action'
-> {
-  /**
-   * Function to run when submitting the form data (when form is valid).
-   *
-   * @param field The submitted field
-   * @param detail An object containing the root field of the submitted form as well as the submitted field itself
-   */
-  action: (
-    field: FieldTree<TRootModel & TSubmittedModel>,
-    detail: {
-      root: FieldTree<TRootModel>;
-      submitted: FieldTree<TSubmittedModel>;
-    },
-  ) => Observable<TreeValidationResult>;
-  /**
-   * The `DestroyRef` representing the current context. This can be passed explicitly to use `rxSubmit()`
-   * outside of an injection context. Otherwise, the current `DestroyRef` is injected.
-   */
-  destroyRef?: DestroyRef;
+export interface RxFormSubmitOptions<TModel> extends RxCommonFormSubmitOptions<TModel, unknown> {
+  onSuccess?: () => void;
+  onError?: (error: unknown) => void;
+}
+
+export function rxFormSubmitOptions<TModel>(
+  options: RxFormSubmitOptions<TModel>,
+): FormSubmitOptions<TModel, unknown> {
+  if (!options.destroyRef) {
+    assertInInjectionContext(rxFormSubmitOptions);
+  }
+
+  const { action, destroyRef, onSuccess, onError, ...otherOptions } = options;
+
+  return {
+    action: (form, detail) =>
+      firstValueFrom(
+        action(form, detail).pipe(
+          takeUntilDestroyed(destroyRef),
+          tap(() => {
+            if (onSuccess && form().valid()) {
+              onSuccess();
+            }
+          }),
+          catchError((error: unknown) => {
+            if (onError) {
+              onError(error);
+              return of(undefined);
+            }
+            throw error;
+          }),
+        ),
+        {
+          defaultValue: undefined,
+        },
+      ),
+    ...otherOptions,
+  };
 }
