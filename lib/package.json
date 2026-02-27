@@ -1,6 +1,21 @@
 {
   "name": "angular-rx-submit",
   "version": "0.0.1",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/cyrilletuzi"
+  },
+  "description": "This library provides the `rxSubmit()` function, on Observable-based equivalent of the Promise-based `submit()` of Angular signal forms. Why? Cancellation and consistency with a simple function.",
+  "author": "Cyrille Tuzi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyrilletuzi/angular-rx-submit.git"
+  },
+  "homepage": "https://github.com/cyrilletuzi/angular-rx-submit",
+  "bugs": {
+    "url": "https://github.com/cyrilletuzi/angular-rx-submit"
+  },
   "peerDependencies": {
     "@angular/core": "^21.2.0",
     "@angular/forms": "^21.2.0",
