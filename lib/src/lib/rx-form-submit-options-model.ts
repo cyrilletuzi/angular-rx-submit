@@ -2,7 +2,7 @@ import type { DestroyRef } from '@angular/core';
 import type { FieldTree, FormSubmitOptions, TreeValidationResult } from '@angular/forms/signals';
 import type { Observable } from 'rxjs';
 
-export interface RxCommonFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
+export interface RxFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
   FormSubmitOptions<TRootModel, TSubmittedModel>,
   'action'
 > {

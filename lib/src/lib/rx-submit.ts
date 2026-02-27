@@ -2,14 +2,7 @@ import { assertInInjectionContext, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { submit, type FieldTree } from '@angular/forms/signals';
 import { defer, firstValueFrom, type Observable } from 'rxjs';
-import type { RxCommonFormSubmitOptions } from './rx-common-form-submit-options';
-
-/**
- * Options that can be specified when submitting a form with `rxSubmit()`.
- *
- * @experimental 21.2.0
- */
-export interface RxSubmitOptions<TModel> extends RxCommonFormSubmitOptions<unknown, TModel> {}
+import type { RxFormSubmitOptions } from './rx-form-submit-options-model';
 
 /**
  * Submits a given `FieldTree` using the given action function and applies any submission errors
@@ -53,7 +46,7 @@ export interface RxSubmitOptions<TModel> extends RxCommonFormSubmitOptions<unkno
  */
 export function rxSubmit<TModel>(
   form: FieldTree<TModel>,
-  options: RxSubmitOptions<TModel>,
+  options: RxFormSubmitOptions<unknown, TModel>,
 ): Observable<boolean> {
   if (!options.destroyRef) {
     assertInInjectionContext(rxSubmit);

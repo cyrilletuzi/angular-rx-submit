@@ -1,45 +1,28 @@
 import { assertInInjectionContext, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { FormSubmitOptions } from '@angular/forms/signals';
-import { catchError, firstValueFrom, of, tap } from 'rxjs';
-import type { RxCommonFormSubmitOptions } from './rx-common-form-submit-options';
+import { firstValueFrom } from 'rxjs';
+import type { RxFormSubmitOptions } from './rx-form-submit-options-model';
 
-export interface RxFormSubmitOptions<TModel> extends RxCommonFormSubmitOptions<TModel, unknown> {
-  onSuccess?: () => void;
-  onError?: (error: unknown) => void;
-}
-
+/**
+ * Options that can be specified when submitting a form with `rxSubmit()`.
+ *
+ * @experimental 21.2.0
+ */
 export function rxFormSubmitOptions<TModel>(
-  options: RxFormSubmitOptions<TModel>,
+  options: RxFormSubmitOptions<TModel, unknown>,
 ): FormSubmitOptions<TModel, unknown> {
   if (!options.destroyRef) {
     assertInInjectionContext(rxFormSubmitOptions);
   }
 
-  const { action, destroyRef = inject(DestroyRef), onSuccess, onError, ...otherOptions } = options;
+  const { action, destroyRef = inject(DestroyRef), ...otherOptions } = options;
 
   return {
     action: (form, detail) =>
-      firstValueFrom(
-        action(form, detail).pipe(
-          takeUntilDestroyed(destroyRef),
-          tap((treeValidationResult) => {
-            if (onSuccess && !treeValidationResult) {
-              onSuccess();
-            }
-          }),
-          catchError((error: unknown) => {
-            if (onError) {
-              onError(error);
-              return of(undefined);
-            }
-            throw error;
-          }),
-        ),
-        {
-          defaultValue: undefined,
-        },
-      ),
+      firstValueFrom(action(form, detail).pipe(takeUntilDestroyed(destroyRef)), {
+        defaultValue: undefined,
+      }),
     ...otherOptions,
   };
 }
