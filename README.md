@@ -62,7 +62,7 @@ export class EditPage {
 }
 ```
 
-A more complete example is available in the "Full example" section below.
+A more complete example is available in the "Full example" section below, and a real-word example is available in the [demo app](./app-demo/src/app/app.ts).
 
 ## Common issues
 
@@ -180,7 +180,7 @@ export function mapApiResponseToTreeValidationResult(response: ApiResponse): Tre
     ? null
     : {
         kind: 'apiError',
-        message: response.error?.message,
+        message: response.error?.message ?? '',
       };
 }
 ```
@@ -252,7 +252,7 @@ A given project should be consistent, and having similar actions sometimes Obser
 
 ### Simple function
 
-One could transform an Observable to a Promise, but doing so in the `submit()` scenario is not as trivial as it seems, as it can be seen in the [source code](lib/src/lib/rx-submit.ts), which shows multiple pitfalls:
+One could transform an Observable to a Promise, but doing so in the `submit()` scenario is not as trivial as it seems, as it can be seen in the [source code](./lib/src/lib/rx-submit.ts), which shows multiple pitfalls:
 
 - there is not just 1 but 2 Observable <=> Promise transformations
 - there is thus 2 cancellation to manage
@@ -290,7 +290,7 @@ export function mapApiResponseToTreeValidationResult(response: ApiResponse): Tre
     ? null // `null`, `undefined` or `void` if no error
     : {
         kind: 'apiError',
-        message: response.error?.message,
+        message: response.error?.message ?? '',
       }; // a `ValidationError.WithOptionalFieldTree`, or an array of that
 }
 
@@ -350,6 +350,8 @@ export class EditPage {
   }
 }
 ```
+
+A real-word example is also available in the [demo app](./app-demo/src/app/app.ts).
 
 ## mapRxFormSubmitOptions
 
