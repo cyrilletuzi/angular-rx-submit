@@ -1,4 +1,4 @@
-import { assertInInjectionContext } from '@angular/core';
+import { assertInInjectionContext, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import type { FormSubmitOptions } from '@angular/forms/signals';
 import { catchError, firstValueFrom, of, tap } from 'rxjs';
@@ -16,7 +16,7 @@ export function rxFormSubmitOptions<TModel>(
     assertInInjectionContext(rxFormSubmitOptions);
   }
 
-  const { action, destroyRef, onSuccess, onError, ...otherOptions } = options;
+  const { action, destroyRef = inject(DestroyRef), onSuccess, onError, ...otherOptions } = options;
 
   return {
     action: (form, detail) =>

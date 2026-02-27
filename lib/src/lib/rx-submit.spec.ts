@@ -79,7 +79,7 @@ describe('rxSubmit ', () => {
         });
       }));
 
-    it('should succeed be invalid when returning one validation error', () =>
+    it('should be invalid when returning one validation error', () =>
       new Promise((resolve, reject) => {
         let success: boolean;
 
