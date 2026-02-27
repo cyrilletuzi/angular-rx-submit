@@ -2,7 +2,7 @@ import { assertInInjectionContext, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { submit, type FieldTree } from '@angular/forms/signals';
 import { defer, firstValueFrom, type Observable } from 'rxjs';
-import type { RxFormSubmitOptions } from './rx-form-submit-options-model';
+import type { RxFormSubmitOptions } from './rx-form-submit-options';
 
 /**
  * Submits a given `FieldTree` using the given action function and applies any submission errors
