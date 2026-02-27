@@ -5,44 +5,43 @@ import { defer, firstValueFrom, type Observable } from 'rxjs';
 import type { RxFormSubmitOptions } from './rx-form-submit-options';
 
 /**
- * Submits a given `FieldTree` using the given action function and applies any submission errors
- * resulting from the action to the field. Submission errors returned by the `action` will be integrated
- * into the field as a `ValidationError` on the sub-field indicated by the `fieldTree` property of the
- * submission error.
+ * Observable-based version of the Angular `submit()` (which is Promise-based).
+ *
+ * **Important: this function requires an injection context. Using it outside an injection context requires to pass a `DestroyRef` in the options, like in the example below; otherwise it will throw the `NG0203` runtime error: https://angular.dev/errors/NG0203**
+ *
+ * @param form The form to submit.
+ * @param options Options for the submission, see `RxFormSubmitOptions`
+ * @returns An Observable of boolean, indicating if the submission was successful.
  *
  * @example
- * ```ts
- * function registerNewUser(registrationForm: FieldTree<{username: string, password: string}>): Observable<TreeValidationResult> {
- *   return myClient.registerNewUser(registrationForm().value()).pipe(
- *     map((result) => {
- *       if (result.errorCode === myClient.ErrorCode.USERNAME_TAKEN) {
- *         return [{
- *           fieldTree: registrationForm.username,
- *           kind: 'server',
- *           message: 'Username already taken',
- *         }];
- *       }
- *       return undefined;
- *     }),
- *   );
+ * Component({
+ *   imports: [FormRoot],
+ *   template: `<form [formRoot]="form" (submit)="save()"></form>`,
+ * })
+ * export class EditPage {
+ *   private readonly destroyRef = inject(DestroyRef);
+ *   private readonly formModel = signal({ userName: '' });
+ *   protected readonly form = form(this.formModel);
+ *
+ *   protected save(): void {
+ *     rxSubmit(this.form, {
+ *       action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
+ *       destroyRef: this.destroyRef,
+ *     }).subscribe({
+ *       next: (success) => {
+ *         if (success) {
+ *           // Manage success here
+ *         }
+ *       },
+ *       error: (error: unknown) => {
+ *         // Manage error here
+ *       },
+ *     });
+ *   }
  * }
  *
- * const registrationForm = form(signal({ username: 'elmo', password: '' }));
- *
- * rxSubmit(registrationForm, {
- *   action: async (f) => registerNewUser(f),
- * }).subscribe();
- *
- * registrationForm.username().errors(); // [{kind: 'server', message: 'Username already taken'}]
- * ```
- *
- * @param form The field to submit.
- * @param options Options for the submission.
- * @returns Whether the submission was successful.
- * @template TModel The data type of the field being submitted.
- *
- * @category submission
- * @experimental 21.2.0
+ * @version 21.2.0
+ * @experimental
  */
 export function rxSubmit<TModel>(
   form: FieldTree<TModel>,
