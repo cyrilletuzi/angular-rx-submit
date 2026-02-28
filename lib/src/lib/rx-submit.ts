@@ -15,15 +15,16 @@ import type { RxFormSubmitOptions } from './rx-form-submit-options';
  *
  * @example
  * Component({
- *   imports: [FormRoot],
- *   template: `<form [formRoot]="form" (submit)="save()"></form>`,
+ *   template: `<form (submit)="save($event)"></form>`,
  * })
  * export class EditPage {
  *   private readonly destroyRef = inject(DestroyRef);
  *   private readonly formModel = signal({ userName: '' });
  *   protected readonly form = form(this.formModel);
  *
- *   protected save(): void {
+ *   protected save(event: Event): void {
+ *     event.preventDefault();
+ *
  *     rxSubmit(this.form, {
  *       action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
  *       destroyRef: this.destroyRef,

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { form, FormField, FormRoot } from '@angular/forms/signals';
+import { form, FormField } from '@angular/forms/signals';
 import { rxSubmit } from 'angular-rx-submit';
 import { map } from 'rxjs';
 import { mapApiResponseToValidationTreeResult } from './api-adapters';
@@ -9,9 +9,9 @@ import { HttpApi } from './http-api';
 
 @Component({
   selector: 'app-root',
-  imports: [FormRoot, FormField],
+  imports: [FormField],
   template: `
-    <form [formRoot]="form" (submit)="save()">
+    <form novalidate (submit)="save($event)">
       <label>
         Name:
         <input type="text" [formField]="form.name" />
@@ -45,7 +45,9 @@ export class App {
 
   protected readonly globalError = signal<string | undefined>(undefined);
 
-  protected save(): void {
+  protected save(event: Event): void {
+    event.preventDefault();
+
     this.globalError.set(undefined);
 
     rxSubmit(this.form, {

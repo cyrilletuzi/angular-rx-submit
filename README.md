@@ -36,15 +36,16 @@ More details about the advantages of `rxSubmit()` are available in the "Problems
 import { rxSubmit } from 'angular-rx-submit';
 
 @Component({
-  imports: [FormRoot],
-  template: `<form [formRoot]="form" (submit)="save()"></form>`,
+  template: `<form (submit)="save($event)"></form>`,
 })
 export class EditPage {
   private readonly destroyRef = inject(DestroyRef);
   private readonly formModel = signal({ userName: '' });
   protected readonly form = form(this.formModel);
 
-  protected save(): void {
+  protected save(event: Event): void {
+    event.preventDefault();
+
     rxSubmit(this.form, {
       action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
       destroyRef: this.destroyRef,
@@ -76,15 +77,16 @@ But for that to work, like many other Angular functions (`takeUntilDestroyed()`,
 
 ```ts
 @Component({
-  imports: [FormRoot],
-  template: ` <form [formRoot]="form" (submit)="save()"></form> `,
+  template: ` <form (submit)="save($event)"></form> `,
 })
 export class EditPage {
   private readonly destroyRef = inject(DestroyRef); // ⬅️
   private readonly formModel = signal({ username: '' });
   protected readonly form = form(this.formModel);
 
-  protected save(): void {
+  protected save(event: Event): void {
+    event.preventDefault();
+
     rxSubmit(this.form, {
       action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
       destroyRef: this.destroyRef, // ⬅️
@@ -97,8 +99,7 @@ export class EditPage {
 
 ```ts
 @Component({
-  imports: [FormRoot],
-  template: `<form [formRoot]="form" (submit)="save()"></form>`,
+  template: `<form (submit)="save($event)"></form>`,
 })
 export class EditPage {
   private readonly formModel = signal({ username: '' });
@@ -108,7 +109,9 @@ export class EditPage {
     action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
   });
 
-  protected save(): void {
+  protected save(event: Event): void {
+    event.preventDefault();
+
     submitObservable.subscribe();
   }
 }
@@ -191,8 +194,7 @@ As with the official `submit()`, do _not_ trigger `rxSubmit()` multiple times in
 
 ```ts
 @Component({
-  imports: [FormRoot],
-  template: `<form [formRoot]="form" (submit)="save()">
+  template: `<form (submit)="save($event)">
     <button type="submit" [disabled]="form().submitting()">Save</button>
   </form>`,
 })
@@ -210,8 +212,7 @@ Let us take a common and basic example with the Promise-based `submit()`:
 
 ```ts
 @Component({
-  imports: [FormRoot],
-  template: `<form [formRoot]="form" (submit)="save()"></form>`,
+  template: `<form (submit)="save($event)"></form>`,
 })
 export class EditPage {
   private readonly router = inject(Router);
@@ -219,7 +220,9 @@ export class EditPage {
   private readonly formModel = signal({ username: '' });
   protected readonly form = form(this.formModel);
 
-  protected save(): void {
+  protected save(event: Event): void {
+    event.preventDefault();
+
     submit(this.form, {
       action: async (submittedForm) => somePromise(submittedForm().value()),
     })
@@ -306,9 +309,8 @@ export class Api {
 }
 
 @Component({
-  imports: [FormRoot],
   template: `
-    <form [formRoot]="form" (submit)="save()">
+    <form novalidate (submit)="save($event)">
       <label>
         Username
         <input type="text" [formField]="form.username" />
@@ -327,7 +329,9 @@ export class EditPage {
   });
   protected readonly form = form(formModel);
 
-  protected save(): void {
+  protected save(event: Event): void {
+    event.preventDefault();
+
     rxSubmit(this.form, {
       action: (submittedForm) =>
         // Like the `submit()` action Promise, the Observable must return a `TreeValidationResult`
