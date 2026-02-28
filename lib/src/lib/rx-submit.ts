@@ -15,7 +15,7 @@ import type { RxFormSubmitOptions } from './rx-form-submit-options';
  *
  * @example
  * Component({
- *   template: `<form (submit)="save($event)"></form>`,
+ *   template: `<form novalidate (submit)="save($event)"></form>`,
  * })
  * export class EditPage {
  *   private readonly destroyRef = inject(DestroyRef);

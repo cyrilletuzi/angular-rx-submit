@@ -36,7 +36,7 @@ More details about the advantages of `rxSubmit()` are available in the "Problems
 import { rxSubmit } from 'angular-rx-submit';
 
 @Component({
-  template: `<form (submit)="save($event)"></form>`,
+  template: `<form novalidate (submit)="save($event)"></form>`,
 })
 export class EditPage {
   private readonly destroyRef = inject(DestroyRef);
@@ -77,7 +77,7 @@ But for that to work, like many other Angular functions (`takeUntilDestroyed()`,
 
 ```ts
 @Component({
-  template: ` <form (submit)="save($event)"></form> `,
+  template: ` <form novalidate (submit)="save($event)"></form> `,
 })
 export class EditPage {
   private readonly destroyRef = inject(DestroyRef); // ⬅️
@@ -99,7 +99,7 @@ export class EditPage {
 
 ```ts
 @Component({
-  template: `<form (submit)="save($event)"></form>`,
+  template: `<form novalidate (submit)="save($event)"></form>`,
 })
 export class EditPage {
   private readonly formModel = signal({ username: '' });
@@ -194,7 +194,7 @@ As with the official `submit()`, do _not_ trigger `rxSubmit()` multiple times in
 
 ```ts
 @Component({
-  template: `<form (submit)="save($event)">
+  template: `<form novalidate (submit)="save($event)">
     <button type="submit" [disabled]="form().submitting()">Save</button>
   </form>`,
 })
@@ -212,7 +212,7 @@ Let us take a common and basic example with the Promise-based `submit()`:
 
 ```ts
 @Component({
-  template: `<form (submit)="save($event)"></form>`,
+  template: `<form novalidate (submit)="save($event)"></form>`,
 })
 export class EditPage {
   private readonly router = inject(Router);
