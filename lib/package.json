@@ -5,7 +5,7 @@
     "type": "github",
     "url": "https://github.com/sponsors/cyrilletuzi"
   },
-  "description": "This library provides the `rxSubmit()` function, on Observable-based equivalent of the Promise-based `submit()` of Angular signal forms. Why? Cancellation and consistency with a simple function.",
+  "description": "RxJS interoperability for Angular signal forms, with the `rxSubmit()` function, an Observable-based equivalent of the Promise-based `submit()`. For cancellation, consistency and simplicity.",
   "author": "Cyrille Tuzi",
   "license": "MIT",
   "repository": {

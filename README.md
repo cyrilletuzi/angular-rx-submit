@@ -1,10 +1,10 @@
 # angular-rx-submit
 
-This library provides the `rxSubmit()` function, on Observable-based equivalent of the Promise-based `submit()` of Angular signal forms. Why?
+RxJS interoperability for Angular signal forms, with the `rxSubmit()` function, an Observable-based equivalent of the Promise-based `submit()`. Why?
 
 - cancellation
 - consistency
-- simple function
+- simplicity
 
 More details about the advantages of `rxSubmit()` are available in the "Problems solved" section below.
 
@@ -250,7 +250,7 @@ Nearly everytime, submitting a form implies a HTTP request. `HttpClient`, the of
 
 A given project should be consistent, and having similar actions sometimes Observable-based, and some other times Promise-based, is not consistent.
 
-### Simple function
+### Simplicity
 
 One could transform an Observable to a Promise, but doing so in the `submit()` scenario is not as trivial as it seems, as it can be seen in the [source code](./lib/src/lib/rx-submit.ts), which shows multiple pitfalls:
 
