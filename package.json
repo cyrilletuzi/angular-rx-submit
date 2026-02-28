@@ -6,8 +6,14 @@
     "start-demo": "ng serve app-demo",
     "build": "ng build lib",
     "test": "ng test lib --watch=false && ng test app-demo --watch=false",
-    "test-watch": "ng test lib",
-    "lint": "ng lint"
+    "test-lib-watch": "ng test lib",
+    "test-app-demo": "ng test app-demo --watch=false",
+    "lint": "ng lint",
+    "release:patch": "VERSION=patch npm run release",
+    "release:minor": "VERSION=minor npm run release",
+    "release:major": "VERSION=major npm run release",
+    "release": "if test $VERSION; then npm run build && cd lib && npm version $VERSION --no-git-tag-version && git add package.json && cd .. && git commit -m \"release\" && npm version $VERSION && git push; fi",
+    "publish-release": "git push origin v$npm_package_version"
   },
   "private": true,
   "packageManager": "npm@11.10.0",
