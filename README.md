@@ -65,6 +65,8 @@ export class EditPage {
 
 A more complete example is available in the "Full example" section below, and a real-word example is available in the [demo app](./app-demo/src/app/app.ts).
 
+Also, an alternative using the form `submission` configuration is available in the "mapRxFormSubmitOptions" section below.
+
 ## Common issues
 
 ### Injection context
@@ -387,5 +389,3 @@ export class EditPage {
   });
 }
 ```
-
-One reason I do not recommended this approach is because it is very easy to forget to manage the errors; so do not forget the `catchError()` if going this way.
