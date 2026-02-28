@@ -42,5 +42,5 @@ export interface RxFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
    * Otherwise, the current `DestroyRef` is injected.
    * Using `rxSubmit()` or `mapRxFormSubmitOptions()` outside an injection context and without providing a `DestroyRef` will throw the `NG0203` runtime error: https://angular.dev/errors/NG0203
    */
-  destroyRef?: DestroyRef;
+  destroyRef?: DestroyRef | undefined;
 }

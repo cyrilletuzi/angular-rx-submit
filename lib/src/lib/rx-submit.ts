@@ -51,6 +51,7 @@ export function rxSubmit<TModel>(
     assertInInjectionContext(rxSubmit);
   }
 
+  /* It is important to do `inject()` here, as the injection context is then lost in the below callbacks */
   const { action, destroyRef = inject(DestroyRef), ...otherOptions } = options;
 
   /* `submit()` the form and transform the Promise return into a lazy Observable.
@@ -58,9 +59,9 @@ export function rxSubmit<TModel>(
    * otherwise with `from()`, `submit()` would be called immediately. */
   return defer(() =>
     submit(form, {
-      action: async (submittedForm, detail) =>
+      action: (submittedForm, detail) =>
         /* Transform the action Observable into a Promise */
-        await firstValueFrom(
+        firstValueFrom(
           /* Pass the form to the user-provided and Observable-based action callback */
           action(submittedForm, detail).pipe(takeUntilDestroyed(destroyRef)),
           {

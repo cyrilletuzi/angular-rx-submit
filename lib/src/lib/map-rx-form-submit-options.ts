@@ -47,13 +47,20 @@ export function mapRxFormSubmitOptions<TModel>(
     assertInInjectionContext(mapRxFormSubmitOptions);
   }
 
+  /* It is important to do `inject()` here, as the injection context is then lost in the below callbacks */
   const { action, destroyRef = inject(DestroyRef), ...otherOptions } = options;
 
   return {
-    action: async (form, detail) =>
-      firstValueFrom(action(form, detail).pipe(takeUntilDestroyed(destroyRef)), {
-        defaultValue: undefined,
-      }),
+    action: (form, detail) =>
+      /* Transform the action Observable into a Promise */
+      firstValueFrom(
+        /* Pass the form to the user-provided and Observable-based action callback */
+        action(form, detail).pipe(takeUntilDestroyed(destroyRef)),
+        {
+          /* If `takeUntilDestroyed()` happens, returns `undefined` instead of throwing an `EmptyError` */
+          defaultValue: undefined,
+        },
+      ),
     ...otherOptions,
   };
 }
