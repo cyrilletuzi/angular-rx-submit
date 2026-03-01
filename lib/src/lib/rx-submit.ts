@@ -31,11 +31,11 @@ import type { RxFormSubmitOptions } from './rx-form-submit-options';
  *     }).subscribe({
  *       next: (success) => {
  *         if (success) {
- *           // Manage success here
+ *           // Manage success here (for example: redirecting to another page)
  *         }
  *       },
  *       error: (error: unknown) => {
- *         // Manage error here
+ *         // Manage error here (for example: displaying service is unavailable)
  *       },
  *     });
  *   }

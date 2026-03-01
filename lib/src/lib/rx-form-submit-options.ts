@@ -6,7 +6,7 @@ import type { Observable } from 'rxjs';
  * Observabled-based version of the Angular `FormSubmitOptions` (which is Promise-based).
  * It can be used:
  * 1. when submitting a form with `rxSubmit()`
- * 2. when using the form `submission` configuration with `rxSubmission()`
+ * 2. when using the form `submission` configuration with `rxAction()`
  *
  * See the documentation of each property for more details.
  *
@@ -38,9 +38,9 @@ export interface RxFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
   ) => Observable<TreeValidationResult>;
   /**
    * The `DestroyRef` representing the current context.
-   * **It is required when using `rxSubmit()` or `rxSubmission()` outside of an injection context.**
+   * **It is required when using `rxSubmit()` or `rxAction()` outside of an injection context.**
    * Otherwise, the current `DestroyRef` is injected.
-   * Using `rxSubmit()` or `rxSubmission()` outside an injection context and without providing a `DestroyRef` will throw the `NG0203` runtime error: https://angular.dev/errors/NG0203
+   * Using `rxSubmit()` or `rxAction()` outside an injection context and without providing a `DestroyRef` will throw the `NG0203` runtime error: https://angular.dev/errors/NG0203
    */
   destroyRef?: DestroyRef | undefined;
 }

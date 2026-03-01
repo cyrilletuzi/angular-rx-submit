@@ -52,11 +52,11 @@ export class EditPage {
     }).subscribe({
       next: (success) => {
         if (success) {
-          // Manage success here (like redirecting to another page)
+          // Manage success here (for example: redirecting to another page)
         }
       },
       error: (error: unknown) => {
-        // Manage error here
+        // Manage error here (for example: displaying service is unavailable)
       },
     });
   }
@@ -65,7 +65,7 @@ export class EditPage {
 
 A more complete example is available in the "Full example" section below, and a real-word example is available in the [demo app](./app-demo/src/app/app.ts).
 
-Also, an alternative using the form `submission` configuration is available in the "rxSubmission" section below.
+Also, an alternative using the form `submission` configuration is available in the "rxAction" section below.
 
 ## Common issues
 
@@ -359,11 +359,13 @@ export class EditPage {
 
 A real-word example is also available in the [demo app](./app-demo/src/app/app.ts).
 
-## rxSubmission
+## rxAction
 
-While not the recommended approach, this library also provides the `rxSubmission()` function, to achieve the same goal but directly inside the form `submission` configuration.
+While not the recommended approach, this library also provides the `rxAction()` function, to achieve the same goal but directly inside the form `submission` configuration.
 
 ```ts
+import { rxAction } from 'angular-rx-submit';
+
 @Component({
   imports: [FormRoot],
   template: `<form [formRoot]="form"></form>`,
@@ -372,20 +374,23 @@ export class EditPage {
   private readonly destroyRef = inject(DestroyRef);
   private readonly formModel = signal({ userName: '' });
   protected readonly form = form(this.formModel, {
-    submission: rxSubmission({
-      action: (submittedForm) =>
+    submission: {
+      action: rxAction((submittedForm) =>
         someObservableOfTreeValidationResult(submittedForm().value()).pipe(
-          tap((validationResult) => {
-            if (!validationResult) {
-              // Manage success here (like redirecting to another page)
-            }
-          }),
-          catchError((error: unknown) => {
-            // Manage error here
-            return of(undefined);
+          tap({
+            complete: () => {
+              if (submittedForm().valid()) {
+                // Manage success here (for example: redirecting to another page)
+              }
+            },
+            error: (error: unknown) => {
+              // Manage error here (for example: displaying service is unavailable)
+              return of(undefined);
+            },
           }),
         ),
-    }),
+      ),
+    },
   });
 }
 ```

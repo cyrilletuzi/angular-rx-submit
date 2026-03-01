@@ -37,11 +37,7 @@ export class App {
   private readonly formModel = signal<User>({
     name: '',
   });
-  protected readonly form = form(this.formModel, {
-    submission: {
-      action: async () => {},
-    },
-  });
+  protected readonly form = form(this.formModel);
 
   protected readonly globalError = signal<string | undefined>(undefined);
 
@@ -59,12 +55,12 @@ export class App {
     }).subscribe({
       next: (success) => {
         if (success) {
-          // Manage success here like displaying success or redirecting to another page
+          // Manage success here (for example: redirecting to another page)
           this.globalError.set(`Success!`);
         }
       },
       error: (error: unknown) => {
-        // Manage error here
+        // Manage error here (for example: displaying service is unavailable)
         if (error instanceof HttpErrorResponse && error.status === 500) {
           this.globalError.set(`Service unavailable`);
         } else {
