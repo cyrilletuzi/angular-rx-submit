@@ -40,7 +40,7 @@ import { rxSubmit } from 'angular-rx-submit';
 })
 export class EditPage {
   private readonly destroyRef = inject(DestroyRef);
-  private readonly formModel = signal({ userName: '' });
+  private readonly formModel = signal<User>({ name: '' });
   protected readonly form = form(this.formModel);
 
   protected save(event: Event): void {
@@ -83,7 +83,7 @@ But for that to work, like many other Angular functions (`takeUntilDestroyed()`,
 })
 export class EditPage {
   private readonly destroyRef = inject(DestroyRef); // ⬅️
-  private readonly formModel = signal({ username: '' });
+  private readonly formModel = signal<User>({ name: '' });
   protected readonly form = form(this.formModel);
 
   protected save(event: Event): void {
@@ -104,7 +104,7 @@ export class EditPage {
   template: `<form novalidate (submit)="save($event)"></form>`,
 })
 export class EditPage {
-  private readonly formModel = signal({ username: '' });
+  private readonly formModel = signal<User>({ name: '' });
   protected readonly form = form(this.formModel);
 
   private readonly submitObservable = rxSubmit(this.form, {
@@ -201,7 +201,7 @@ As with the official `submit()`, do _not_ trigger `rxSubmit()` multiple times in
   </form>`,
 })
 export class EditPage {
-  private readonly formModel = signal({ username: '' });
+  private readonly formModel = signal<User>({ name: '' });
   protected readonly form = form(this.formModel);
 }
 ```
@@ -219,7 +219,7 @@ Let us take a common and basic example with the Promise-based `submit()`:
 export class EditPage {
   private readonly router = inject(Router);
 
-  private readonly formModel = signal({ username: '' });
+  private readonly formModel = signal<User>({ name: '' });
   protected readonly form = form(this.formModel);
 
   protected save(event: Event): void {
@@ -315,7 +315,7 @@ export class Api {
     <form novalidate (submit)="save($event)">
       <label>
         Username
-        <input type="text" [formField]="form.username" />
+        <input type="text" [formField]="form.name" />
       </label>
       <button type="submit">Save</button>
     </form>
@@ -342,10 +342,12 @@ export class EditPage {
     }).subscribe({
       next: (success) => {
         if (success) {
-          this.router.navigate(['/some/page']).catch(() => {});
+          // Manage success here (for example: redirecting to another page)
+          this.router.navigate(['/some/other/page']).catch(() => {});
         }
       },
       error: (error: unknown) => {
+        // Manage error here (for example: displaying service is unavailable)
         if (error instanceof HttpErrorResponse && error.status === 500) {
           console.log(`Display service unavailable`);
         } else {
@@ -361,36 +363,93 @@ A real-word example is also available in the [demo app](./app-demo/src/app/app.t
 
 ## rxAction
 
-While not the recommended approach, this library also provides the `rxAction()` function, to achieve the same goal but directly inside the form `submission` configuration.
+This library also provides the `rxAction()` function, to achieve the same goal but directly inside the form `submission` configuration.
 
 ```ts
 import { rxAction } from 'angular-rx-submit';
 
 @Component({
   imports: [FormRoot],
-  template: `<form [formRoot]="form"></form>`,
+  template: `
+    <form [formRoot]="form">
+      <label>
+        Username
+        <input type="text" [formField]="form.name" />
+      </label>
+      <button type="submit">Save</button>
+    </form>
+  `,
 })
 export class EditPage {
   private readonly destroyRef = inject(DestroyRef);
-  private readonly formModel = signal({ userName: '' });
+  private readonly formModel = signal<User>({ name: '' });
   protected readonly form = form(this.formModel, {
     submission: {
       action: rxAction((submittedForm) =>
-        someObservableOfTreeValidationResult(submittedForm().value()).pipe(
-          tap({
-            complete: () => {
-              if (submittedForm().valid()) {
-                // Manage success here (for example: redirecting to another page)
-              }
-            },
-            error: (error: unknown) => {
-              // Manage error here (for example: displaying service is unavailable)
-              return of(undefined);
-            },
-          }),
-        ),
+        someObservableOfTreeValidationResult(submittedForm().value()),
       ),
     },
   });
+}
+```
+
+This approach may seem simpler at first, but has multiple pitfalls:
+
+- forgetting to handle errors
+- breaking the separation principle by managing the submission process and the following actions at the same place
+- breaking the separation principle by doing hundred of things in a property declaration
+- things triggered in the wrong order if called in `next` (follow up actions will be triggered first, before the submission really ends)
+
+So it is recommended to:
+
+- handle the error
+- keep the `action` focused on validation, and follow up actions separately
+- do a dedicated method
+- trigger things in the right order, with `complete` instead of `next`
+
+```ts
+import { rxAction } from 'angular-rx-submit';
+
+@Component({
+  imports: [FormRoot],
+  template: `
+    <form [formRoot]="form">
+      <label>
+        Username
+        <input type="text" [formField]="form.name" />
+      </label>
+      <button type="submit">Save</button>
+    </form>
+  `,
+})
+export class EditPage {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly formModel = signal<User>({ name: '' });
+  protected readonly form = form(this.formModel, {
+    submission: {
+      action: rxAction((submittedForm) => this.submit(submittedForm)),
+    },
+  });
+
+  private submit(submittedForm: FieldTree<User>): Observable<TreeValidationResult> {
+    return someObservableOfTreeValidationResult(submittedForm().value()).pipe(
+      tap({
+        complete: () => {
+          if (submittedForm().valid()) {
+            // Manage success here (for example: redirecting to another page)
+            this.router.navigate(['/some/other/page']).catch(() => {});
+          }
+        },
+        error: (error: unknown) => {
+          // Manage error here (for example: displaying service is unavailable)
+          if (error instanceof HttpErrorResponse && error.status === 500) {
+            console.log(`Display service unavailable`);
+          } else {
+            console.log(`Display unexpected error`);
+          }
+        },
+      }),
+    );
+  }
 }
 ```
