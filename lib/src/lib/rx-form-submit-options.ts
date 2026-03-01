@@ -29,7 +29,7 @@ export interface RxFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
    * - `null`, `undefined` or `void` if there is no validation error
    * - a `ValidationError.WithOptionalFieldTree` or an array of this
    */
-  action: (
+  readonly action: (
     field: FieldTree<TRootModel & TSubmittedModel>,
     detail: {
       root: FieldTree<TRootModel>;
@@ -42,5 +42,5 @@ export interface RxFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
    * Otherwise, the current `DestroyRef` is injected.
    * Using `rxSubmit()` or `rxAction()` outside an injection context and without providing a `DestroyRef` will throw the `NG0203` runtime error: https://angular.dev/errors/NG0203
    */
-  destroyRef?: DestroyRef | undefined;
+  readonly destroyRef?: DestroyRef | undefined;
 }
