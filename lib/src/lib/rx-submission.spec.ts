@@ -34,6 +34,7 @@ describe('rxFormSubmitOptions', () => {
     await submit(componentInstance.form);
 
     expect(componentInstance.form().valid()).toBe(true);
+    expect(componentInstance.form().invalid()).toBe(false);
   });
 
   it('should succeed when returning null', async () => {
@@ -41,6 +42,7 @@ describe('rxFormSubmitOptions', () => {
     await submit(componentInstance.form);
 
     expect(componentInstance.form().valid()).toBe(true);
+    expect(componentInstance.form().invalid()).toBe(false);
   });
 
   it('should be invalid when returning one validation error', async () => {
@@ -51,6 +53,7 @@ describe('rxFormSubmitOptions', () => {
     await submit(componentInstance.form);
 
     expect(componentInstance.form().valid()).toBe(false);
+    expect(componentInstance.form().invalid()).toBe(true);
     expect(componentInstance.form().errors()[0]).toEqual(treeValidationResult);
   });
 
@@ -66,6 +69,7 @@ describe('rxFormSubmitOptions', () => {
     await submit(componentInstance.form);
 
     expect(componentInstance.form().valid()).toBe(false);
+    expect(componentInstance.form().invalid()).toBe(true);
     expect(componentInstance.form().errors()[0]).toEqual(error1);
     expect(componentInstance.form().errors()[1]).toEqual(error2);
   });

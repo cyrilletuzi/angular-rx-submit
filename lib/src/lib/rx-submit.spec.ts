@@ -50,6 +50,7 @@ describe('rxSubmit ', () => {
           },
           complete: () => {
             expect(success).toBe(true);
+            expect(componentInstance.form().valid()).toBe(true);
             expect(componentInstance.form().invalid()).toBe(false);
 
             resolve(undefined);
@@ -72,6 +73,7 @@ describe('rxSubmit ', () => {
           },
           complete: () => {
             expect(success).toBe(true);
+            expect(componentInstance.form().valid()).toBe(true);
             expect(componentInstance.form().invalid()).toBe(false);
 
             resolve(undefined);
@@ -100,6 +102,7 @@ describe('rxSubmit ', () => {
           },
           complete: () => {
             expect(success).toBe(false);
+            expect(componentInstance.form().valid()).toBe(false);
             expect(componentInstance.form().invalid()).toBe(true);
             expect(componentInstance.form().errors()[0]).toEqual(treeValidationResult);
 
@@ -133,6 +136,7 @@ describe('rxSubmit ', () => {
           },
           complete: () => {
             expect(success).toBe(false);
+            expect(componentInstance.form().valid()).toBe(false);
             expect(componentInstance.form().invalid()).toBe(true);
             expect(componentInstance.form().errors()[0]).toEqual(error1);
             expect(componentInstance.form().errors()[1]).toEqual(error2);
@@ -222,6 +226,7 @@ describe('rxSubmit ', () => {
               },
               complete: () => {
                 expect(success).toBe(true);
+                expect(this.form().valid()).toBe(true);
                 expect(this.form().invalid()).toBe(false);
 
                 resolve(undefined);
