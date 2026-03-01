@@ -65,7 +65,7 @@ export class EditPage {
 
 A more complete example is available in the "Full example" section below, and a real-word example is available in the [demo app](./app-demo/src/app/app.ts).
 
-Also, an alternative using the form `submission` configuration is available in the "mapRxFormSubmitOptions" section below.
+Also, an alternative using the form `submission` configuration is available in the "rxSubmission" section below.
 
 ## Common issues
 
@@ -359,9 +359,9 @@ export class EditPage {
 
 A real-word example is also available in the [demo app](./app-demo/src/app/app.ts).
 
-## mapRxFormSubmitOptions
+## rxSubmission
 
-While not the recommended approach, this library also provides the `mapRxFormSubmitOptions()` function, to achieve the same goal but directly inside the form `submission` configuration.
+While not the recommended approach, this library also provides the `rxSubmission()` function, to achieve the same goal but directly inside the form `submission` configuration.
 
 ```ts
 @Component({
@@ -372,7 +372,7 @@ export class EditPage {
   private readonly destroyRef = inject(DestroyRef);
   private readonly formModel = signal({ userName: '' });
   protected readonly form = form(this.formModel, {
-    submission: mapRxFormSubmitOptions({
+    submission: rxSubmission({
       action: (submittedForm) =>
         someObservableOfTreeValidationResult(submittedForm().value()).pipe(
           tap((validationResult) => {

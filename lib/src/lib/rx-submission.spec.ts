@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { form, submit, type TreeValidationResult } from '@angular/forms/signals';
 import { asyncScheduler, Observable, of, scheduled } from 'rxjs';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { mapRxFormSubmitOptions } from './map-rx-form-submit-options';
+import { rxSubmission } from './rx-submission';
 
 describe('rxFormSubmitOptions', () => {
   @Component({
@@ -16,7 +16,7 @@ describe('rxFormSubmitOptions', () => {
         test: '',
       }),
       {
-        submission: mapRxFormSubmitOptions({
+        submission: rxSubmission({
           action: () => this.observable,
         }),
       },

@@ -21,7 +21,7 @@ import type { RxFormSubmitOptions } from './rx-form-submit-options';
  *   private readonly destroyRef = inject(DestroyRef);
  *   private readonly formModel = signal({ userName: '' });
  *   protected readonly form = form(this.formModel, {
- *     submission: mapRxFormSubmitOptions({
+ *     submission: rxSubmission({
  *       action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()).pipe(
  *         tap((validationResult) => {
  *           if (!validationResult) {
@@ -40,11 +40,11 @@ import type { RxFormSubmitOptions } from './rx-form-submit-options';
  * @version 21.2.0
  * @experimental
  */
-export function mapRxFormSubmitOptions<TModel>(
+export function rxSubmission<TModel>(
   options: RxFormSubmitOptions<TModel, unknown>,
 ): FormSubmitOptions<TModel, unknown> {
   if (!options.destroyRef) {
-    assertInInjectionContext(mapRxFormSubmitOptions);
+    assertInInjectionContext(rxSubmission);
   }
 
   /* It is important to do `inject()` here, as the injection context is then lost in the below callbacks */
