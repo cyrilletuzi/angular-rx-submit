@@ -58,11 +58,11 @@ module.exports = defineConfig([
         { allowNumber: false, allowString: false },
       ],
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'error',
-      // Disallow shadow variables, allowed In JavaScript but error prone
+      // Immutability
       'no-shadow': 'off',
       '@typescript-eslint/no-shadow': 'error',
-      // Enforce immutability
       '@typescript-eslint/prefer-readonly': 'error',
+      '@typescript-eslint/prefer-readonly-parameter-types': 'error',
       // Loosen some annoying and inadequate empty rules
       'no-empty': [
         'error',

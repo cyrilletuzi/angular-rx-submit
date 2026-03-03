@@ -32,8 +32,8 @@ export interface RxFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
   readonly action: (
     field: FieldTree<TRootModel & TSubmittedModel>,
     detail: {
-      root: FieldTree<TRootModel>;
-      submitted: FieldTree<TSubmittedModel>;
+      readonly root: FieldTree<TRootModel>;
+      readonly submitted: FieldTree<TSubmittedModel>;
     },
   ) => Observable<TreeValidationResult>;
   /**
@@ -42,5 +42,16 @@ export interface RxFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
    * Otherwise, the current `DestroyRef` is injected.
    * Using `rxSubmit()` or `rxSubmission()` outside an injection context and without providing a `DestroyRef` will throw the `NG0203` runtime error: https://angular.dev/errors/NG0203
    */
-  readonly destroyRef?: DestroyRef | undefined;
+  readonly destroyRef?: Readonly<DestroyRef> | undefined;
+  // Override Angular options with better signatures for immutability
+  readonly onInvalid?: (
+    field: FieldTree<TRootModel & TSubmittedModel>,
+    detail: {
+      readonly root: FieldTree<TRootModel>;
+      readonly submitted: FieldTree<TSubmittedModel>;
+    },
+  ) => void;
+  readonly ignoreValidators?: Required<
+    FormSubmitOptions<TRootModel, TSubmittedModel>
+  >['ignoreValidators'];
 }

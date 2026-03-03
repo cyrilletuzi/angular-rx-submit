@@ -53,6 +53,7 @@ export function rxSubmission<TModel>(
   const { action, destroyRef = inject(DestroyRef), ...otherOptions } = options;
 
   return {
+    // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Angular internal, cannot change readonly here
     action: (form, detail) =>
       /* Transform the action Observable into a Promise */
       firstValueFrom(
