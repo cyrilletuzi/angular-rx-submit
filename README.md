@@ -65,7 +65,7 @@ export class EditPage {
 
 A more complete example is available in the "Full example" section below, and a real-word example is available in the [demo app](./app-demo/src/app/app.ts).
 
-Also, an alternative using the form `submission` configuration is available in the "rxAction" section below.
+Also, an alternative using the form `submission` configuration is available in the "rxSubmission" section below.
 
 ## Common issues
 
@@ -361,12 +361,12 @@ export class EditPage {
 
 A real-word example is also available in the [demo app](./app-demo/src/app/app.ts).
 
-## rxAction
+## rxSubmission
 
-This library also provides the `rxAction()` function, to achieve the same goal but directly inside the form `submission` configuration.
+This library also provides the `rxSubmission()` function, to achieve the same goal but directly inside the form `submission` configuration.
 
 ```ts
-import { rxAction } from 'angular-rx-submit';
+import { rxSubmission } from 'angular-rx-submit';
 
 @Component({
   imports: [FormRoot],
@@ -384,11 +384,9 @@ export class EditPage {
   private readonly destroyRef = inject(DestroyRef);
   private readonly formModel = signal<User>({ name: '' });
   protected readonly form = form(this.formModel, {
-    submission: {
-      action: rxAction((submittedForm) =>
-        someObservableOfTreeValidationResult(submittedForm().value()),
-      ),
-    },
+    submission: rxSubmission({
+      action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
+    }),
   });
 }
 ```
@@ -396,19 +394,15 @@ export class EditPage {
 This approach may seem simpler at first, but has multiple pitfalls:
 
 - forgetting to handle errors
-- breaking the separation principle by managing the submission process and the following actions at the same place
 - breaking the separation principle by doing hundred of things in a property declaration
-- things triggered in the wrong order if called in `next` (follow up actions will be triggered first, before the submission really ends)
 
 So it is recommended to:
 
 - handle the error
-- keep the `action` focused on validation, and follow up actions separately
 - do a dedicated method
-- trigger things in the right order, with `complete` instead of `next`
 
 ```ts
-import { rxAction } from 'angular-rx-submit';
+import { rxSubmission } from 'angular-rx-submit';
 
 @Component({
   imports: [FormRoot],
@@ -426,15 +420,15 @@ export class EditPage {
   private readonly destroyRef = inject(DestroyRef);
   private readonly formModel = signal<User>({ name: '' });
   protected readonly form = form(this.formModel, {
-    submission: {
-      action: rxAction((submittedForm) => this.submit(submittedForm)),
-    },
+    submission: rxSubmission({
+      action: (submittedForm) => this.submit(submittedForm),
+    }),
   });
 
   private submit(submittedForm: FieldTree<User>): Observable<TreeValidationResult> {
     return someObservableOfTreeValidationResult(submittedForm().value()).pipe(
       tap({
-        complete: () => {
+        next: () => {
           if (submittedForm().valid()) {
             // Manage success here (for example: redirecting to another page)
             this.router.navigate(['/some/other/page']).catch(() => {});

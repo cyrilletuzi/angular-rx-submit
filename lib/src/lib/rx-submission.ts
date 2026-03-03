@@ -21,10 +21,10 @@ import type { RxFormSubmitOptions } from './rx-form-submit-options';
  *   private readonly destroyRef = inject(DestroyRef);
  *   private readonly formModel = signal({ userName: '' });
  *   protected readonly form = form(this.formModel, {
- *     submission: {
- *       action: rxAction((submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()).pipe(
+ *     submission: rxSubmission({
+ *       action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()).pipe(
  *         tap({
- *           complete: () => {
+ *           next: () => {
  *             if (submittedForm().valid()) {
  *               // Manage success here (for example: redirecting to another page)
  *             }
@@ -34,33 +34,35 @@ import type { RxFormSubmitOptions } from './rx-form-submit-options';
  *             return of(undefined);
  *           },
  *         }),
- *       )),
- *     },
+ *       ),
+ *     }),
  *   });
  * }
  *
  * @version 21.2.0
  * @experimental
  */
-export function rxAction<TModel>(
-  action: RxFormSubmitOptions<TModel, unknown>['action'],
-  options: Pick<RxFormSubmitOptions<TModel, unknown>, 'destroyRef'> = {},
-): FormSubmitOptions<TModel, unknown>['action'] {
+export function rxSubmission<TModel>(
+  options: RxFormSubmitOptions<TModel, unknown>,
+): FormSubmitOptions<TModel, unknown> {
   if (!options.destroyRef) {
-    assertInInjectionContext(rxAction);
+    assertInInjectionContext(rxSubmission);
   }
 
   /* It is important to do `inject()` here, as the injection context is then lost in the below callbacks */
-  const destroyRef = options.destroyRef ?? inject(DestroyRef);
+  const { action, destroyRef = inject(DestroyRef), ...otherOptions } = options;
 
-  return (form, detail) =>
-    /* Transform the action Observable into a Promise */
-    firstValueFrom(
-      /* Pass the form to the user-provided and Observable-based action callback */
-      action(form, detail).pipe(takeUntilDestroyed(destroyRef)),
-      {
-        /* If `takeUntilDestroyed()` happens, returns `undefined` instead of throwing an `EmptyError` */
-        defaultValue: undefined,
-      },
-    );
+  return {
+    action: (form, detail) =>
+      /* Transform the action Observable into a Promise */
+      firstValueFrom(
+        /* Pass the form to the user-provided and Observable-based action callback */
+        action(form, detail).pipe(takeUntilDestroyed(destroyRef)),
+        {
+          /* If `takeUntilDestroyed()` happens, returns `undefined` instead of throwing an `EmptyError` */
+          defaultValue: undefined,
+        },
+      ),
+    ...otherOptions,
+  };
 }
