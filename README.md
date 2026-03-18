@@ -35,7 +35,7 @@ More details about the advantages of `rxSubmit()` are available in the "Problems
 
 ### Usage
 
-```ts
+```typescript
 import { rxSubmit } from 'angular-rx-submit';
 
 @Component({
@@ -80,7 +80,7 @@ But for that to work, like many other Angular functions (`takeUntilDestroyed()`,
 
 - **provide a `DestroyRef`**
 
-```ts
+```typescript
 @Component({
   template: ` <form novalidate (submit)="save($event)"></form> `,
 })
@@ -102,7 +102,7 @@ export class EditPage {
 
 - or use `rxSubmit()` inside an [injection context](https://angular.dev/guide/di/dependency-injection-context) (field initializer, constructor...)
 
-```ts
+```typescript
 @Component({
   template: `<form novalidate (submit)="save($event)"></form>`,
 })
@@ -129,7 +129,7 @@ Unsubscribing is _not_ needed, `rxSubmit()` already does a `takeUntilDestroyed()
 
 But **subscribing is required**, even if there is nothing something specific to do after submission (because it is how `Observable`s work).
 
-```ts
+```typescript
 // ❌ Nothing happens
 rxSubmit(this.form, () => {
   action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
@@ -147,7 +147,7 @@ rxSubmit(this.form, {
 
 As for any Observable, handling errors is recommended. If the provided Observable throws, the error will be propagated by `rxSubmit()`. The most common case is the HTTP request failing.
 
-```ts
+```typescript
 rxSubmit(this.form, {
   action: () => (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
   destroyRef: this.destroyRef,
@@ -176,7 +176,7 @@ As for the official Angular `submit()`, the Observable provided to `rxSubmit()` 
 - a `ValidationError.WithOptionalFieldTree` if there is a validation error
 - an array of `ValidationError.WithOptionalFieldTree` if there are multiple validation errors
 
-```ts
+```typescript
 interface ApiResponse {
   readonly success: boolean;
   readonly error?: { message: string };
@@ -196,7 +196,7 @@ export function mapApiResponseToTreeValidationResult(response: ApiResponse): Tre
 
 As with the official `submit()`, do _not_ trigger `rxSubmit()` multiple times in parallel, to avoid race issues. So be sure to block submission when one is already in progress:
 
-```ts
+```typescript
 @Component({
   template: `<form novalidate (submit)="save($event)">
     <button type="submit" [disabled]="form().submitting()">Save</button>
@@ -214,7 +214,7 @@ export class EditPage {
 
 Let us take a common and basic example with the Promise-based `submit()`:
 
-```ts
+```typescript
 @Component({
   template: `<form novalidate (submit)="save($event)"></form>`,
 })
@@ -277,7 +277,7 @@ One can feel free to advocate for it if one want.
 
 ## Full example
 
-```ts
+```typescript
 import { rxSubmit } from 'angular-rx-submit';
 
 interface EditModel {
@@ -367,7 +367,7 @@ A real-word example is also available in the [demo app](./app-demo/src/app/app.t
 
 This library also provides the `rxSubmission()` function, to achieve the same goal but directly inside the form `submission` configuration.
 
-```ts
+```typescript
 import { rxSubmission } from 'angular-rx-submit';
 
 @Component({
@@ -408,7 +408,7 @@ So `rxSubmit()` is recommended, and if one sticks to `rxSubmission()` for very s
 - handle the error
 - do a dedicated method
 
-```ts
+```typescript
 import { rxSubmission } from 'angular-rx-submit';
 
 @Component({
