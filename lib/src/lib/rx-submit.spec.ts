@@ -299,7 +299,7 @@ describe('rxSubmit ', () => {
           );
           expect(() => {
             rxSubmit(this.form, { action: () => observable }).subscribe();
-          }).toThrowError(/NG0203/);
+          }).toThrow(/NG0203/);
         }
       }
 
