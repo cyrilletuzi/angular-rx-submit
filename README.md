@@ -18,13 +18,13 @@ More details about the advantages of `rxSubmit()` are available in the "Problems
 ### Requirements
 
 - Angular version >= 21.2.0
-- RxJS version >= 7.4.0
+- RxJS version >= 7.6.0
 
 > [!NOTE]
 > Angular versions 21.0 and 21.1 are _not_ supported, as this library requires a new `submit()` feature introduced in version 21.2.
 
 > [!NOTE]
-> While Angular still allows RxJS version 6, it is _not_ supported by this library.
+> While Angular still allows lower RxJS versions, it is _not_ supported by this library.
 
 ### Installation
 
