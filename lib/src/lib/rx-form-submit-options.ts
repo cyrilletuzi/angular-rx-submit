@@ -24,7 +24,7 @@ export interface RxFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
    * Required function to run when submitting the form (when form is valid).
    *
    * @param field The submitted field (in most cases: the form)
-   * @param detail Only useful if An object containing the root field of the submitted form as well as the submitted field itself
+   * @param detail Only useful if a particular field was submitted instead of the root
    * @returns The function must return an Observable of a `TreeValidationResult`, meaning:
    * - `null`, `undefined` or `void` if there is no validation error
    * - a `ValidationError.WithOptionalFieldTree` or an array of this

@@ -7,7 +7,9 @@ import type { RxFormSubmitOptions } from './rx-form-submit-options';
 /**
  * Observable-based version of the Angular `submit()` (which is Promise-based).
  *
- * **Important: this function requires an injection context. Using it outside an injection context requires to pass a `DestroyRef` in the options, like in the example below; otherwise it will throw the `NG0203` runtime error: https://angular.dev/errors/NG0203**
+ * **Important: this function requires an injection context.
+ * Using it outside an injection context requires to pass a `DestroyRef` in the options, like in the example below;
+ * otherwise it will throw the `NG0203` runtime error: https://angular.dev/errors/NG0203**
  *
  * @param form The form to submit.
  * @param options Options for the submission, see `RxFormSubmitOptions`

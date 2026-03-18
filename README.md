@@ -24,7 +24,7 @@ More details about the advantages of `rxSubmit()` are available in the "Problems
 > Angular versions 21.0 and 21.1 are _not_ supported, as this library requires a new `submit()` feature introduced in version 21.2.
 
 > [!NOTE]
-> While Angular still allows lower RxJS versions, it is _not_ supported by this library.
+> While Angular still allows lower RxJS versions, versions <7.6 are _not_ supported by this library.
 
 ### Installation
 
@@ -113,7 +113,6 @@ export class EditPage {
 
   protected save(event: Event): void {
     event.preventDefault();
-
     this.submitObservable.subscribe();
   }
 }
@@ -401,7 +400,7 @@ This approach may seem simpler at first, but has multiple pitfalls:
   - with `rxSubmit()`, things happen in 2 steps, in the expected order: first the submission management, then the navigation to another page
   - with `rxSubmission()`, as there is only 1 step, the navigation to another page must be managed in the `action` observable, and so it will happen _before_ the submission management actually ends
 
-So `rxSubmit()` is recommended, and if one sticks to `rxSubmission()`, it is recommended to at least:
+So `rxSubmit()` is recommended, and if one sticks to `rxSubmission()` for very simple cases, it is recommended to at least:
 
 - handle the error
 - do a dedicated method
