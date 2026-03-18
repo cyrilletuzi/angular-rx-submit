@@ -8,6 +8,9 @@ RxJS interoperability for Angular signal forms, with the `rxSubmit()` function, 
 
 More details about the advantages of `rxSubmit()` are available in the "Problems solved" section below.
 
+> [!TIP]
+> I am also the author of the [Angular Schematics extension for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=cyrilletuzi.angular-schematics), installed 1.5 million times. Feel free to give it a try.
+
 ## Getting started
 
 ### Status
