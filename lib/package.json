@@ -1,13 +1,28 @@
 {
   "name": "angular-rx-submit",
-  "version": "0.0.1",
+  "version": "21.1.0",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/cyrilletuzi"
+  },
+  "description": "RxJS interoperability for Angular signal forms, with the `rxSubmit()` function, an Observable-based equivalent of the Promise-based `submit()`. For cancellation, consistency and simplicity.",
+  "author": "Cyrille Tuzi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyrilletuzi/angular-rx-submit.git"
+  },
+  "homepage": "https://github.com/cyrilletuzi/angular-rx-submit",
+  "bugs": {
+    "url": "https://github.com/cyrilletuzi/angular-rx-submit"
+  },
   "peerDependencies": {
-    "@angular/core": "^21.2.0-next.0",
-    "@angular/forms": "^21.2.0-next.0",
-    "rxjs": "^7.4.0"
+    "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
+    "rxjs": "^7.6.0"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.5.0"
   },
   "sideEffects": false
 }

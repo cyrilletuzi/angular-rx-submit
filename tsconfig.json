@@ -43,6 +43,12 @@
     },
     {
       "path": "./lib/tsconfig.spec.json"
+    },
+    {
+      "path": "./app-demo/tsconfig.app.json"
+    },
+    {
+      "path": "./app-demo/tsconfig.spec.json"
     }
   ]
 }

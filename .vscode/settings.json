@@ -1,7 +1,7 @@
 {
-  "typescript.preferences.autoImportFileExcludePatterns": ["./dist"],
+  "js/ts.preferences.autoImportFileExcludePatterns": ["./dist"],
   // Use project TypeScript version
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
   // Disable random autocomplete for stricter code
   "editor.wordBasedSuggestions": "off",
   // Formatting rules
@@ -18,11 +18,11 @@
     "*.ts": "${capture}.css, ${capture}.html, ${capture}.spec.ts"
   },
   // Inlay hints (display type information when already known)
-  "typescript.inlayHints.variableTypes.enabled": true,
-  "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
-  "typescript.inlayHints.parameterTypes.enabled": true,
-  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
-  "typescript.inlayHints.enumMemberValues.enabled": true,
-  "typescript.inlayHints.parameterNames.enabled": "all",
-  "typescript.inlayHints.variableTypes.suppressWhenTypeMatchesName": false
+  "js/ts.inlayHints.variableTypes.enabled": true,
+  "js/ts.inlayHints.propertyDeclarationTypes.enabled": true,
+  "js/ts.inlayHints.parameterTypes.enabled": true,
+  "js/ts.inlayHints.functionLikeReturnTypes.enabled": true,
+  "js/ts.inlayHints.enumMemberValues.enabled": true,
+  "js/ts.inlayHints.parameterNames.enabled": "all",
+  "js/ts.inlayHints.variableTypes.suppressWhenTypeMatchesName": false
 }

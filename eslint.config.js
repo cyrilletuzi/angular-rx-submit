@@ -58,11 +58,11 @@ module.exports = defineConfig([
         { allowNumber: false, allowString: false },
       ],
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'error',
-      // Disallow shadow variables, allowed In JavaScript but error prone
+      // Immutability
       'no-shadow': 'off',
       '@typescript-eslint/no-shadow': 'error',
-      // Enforce immutability
       '@typescript-eslint/prefer-readonly': 'error',
+      '@typescript-eslint/prefer-readonly-parameter-types': 'error',
       // Loosen some annoying and inadequate empty rules
       'no-empty': [
         'error',
@@ -74,6 +74,12 @@ module.exports = defineConfig([
         'error',
         {
           allow: ['arrowFunctions'], // some callbacks are required (like in promises `.catch()`), but there is not always something to do inside
+        },
+      ],
+      '@typescript-eslint/no-empty-object-type': [
+        'error',
+        {
+          allowInterfaces: 'with-single-extends',
         },
       ],
       '@typescript-eslint/no-extraneous-class': [
