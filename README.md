@@ -114,7 +114,7 @@ export class EditPage {
   protected save(event: Event): void {
     event.preventDefault();
 
-    submitObservable.subscribe();
+    this.submitObservable.subscribe();
   }
 }
 ```
@@ -269,7 +269,7 @@ It complexifies things a lot, and should be repeated in each form. `rxSubmit()` 
 
 I personnally think `rxSubmit()` should be part of `@angular/rxjs-interop`.
 
-For now, the Angular team has discarded [this request](https://github.com/angular/angular/issues/65199) (from someone else), without even allowing proper discussion about it.
+For now, the Angular team has discarded [this request](https://github.com/angular/angular/issues/65199) (from someone else), without allowing proper discussion about it.
 
 One can feel free to advocate for it if one want.
 
@@ -394,9 +394,14 @@ export class EditPage {
 This approach may seem simpler at first, but has multiple pitfalls:
 
 - forgetting to handle errors
-- breaking the separation principle by doing hundred of things in a property declaration
+- breaking the responsibility principle by doing hundred of different things at the same place
+- acting in a property declaration instead of a method
+- managing actions after success (like navigating to another page) is more confusing
+- order of actions: the example with `rxSubmission()` below is not exactly the same as one with `rxSubmit()` above:
+  - with `rxSubmit()`, things happen in 2 steps, in the expected order: first the submission management, then the navigation to another page
+  - with `rxSubmission()`, as there is only 1 step, the navigation to another page must be managed in the `action` observable, and so it will happen _before_ the submission management actually ends
 
-So it is recommended to:
+So `rxSubmit()` is recommended, and if one sticks to `rxSubmission()`, it is recommended to at least:
 
 - handle the error
 - do a dedicated method
@@ -428,8 +433,9 @@ export class EditPage {
   private submit(submittedForm: FieldTree<User>): Observable<TreeValidationResult> {
     return someObservableOfTreeValidationResult(submittedForm().value()).pipe(
       tap({
-        next: () => {
-          if (submittedForm().valid()) {
+        next: (treeValidationResult) => {
+          // Success = no error
+          if (!treeValidationResult) {
             // Manage success here (for example: redirecting to another page)
             this.router.navigate(['/some/other/page']).catch(() => {});
           }
