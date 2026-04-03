@@ -108,6 +108,8 @@ module.exports = defineConfig([
       '@angular-eslint/prefer-signal-model': 'error',
       '@angular-eslint/require-lifecycle-on-prototype': 'error',
       '@angular-eslint/no-implicit-take-until-destroyed': 'error',
+      // Avoid empty imports which could cause empty files during build
+      '@typescript-eslint/no-import-type-side-effects': 'error',
       // Disallow some erroneous imports
       'no-restricted-imports': [
         'error',
