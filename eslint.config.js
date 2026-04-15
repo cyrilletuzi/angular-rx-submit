@@ -9,6 +9,7 @@ const eslint = require('@eslint/js');
 const { defineConfig } = require('eslint/config');
 const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
+const angularEslintInjectionContext = require('angular-eslint-injection-context');
 
 module.exports = defineConfig([
   {
@@ -18,6 +19,7 @@ module.exports = defineConfig([
       tseslint.configs.strictTypeChecked,
       tseslint.configs.stylisticTypeChecked,
       angular.configs.tsRecommended,
+      angularEslintInjectionContext.configs.recommended,
     ],
     languageOptions: {
       parserOptions: {
@@ -107,7 +109,6 @@ module.exports = defineConfig([
       '@angular-eslint/prefer-output-emitter-ref': 'error',
       '@angular-eslint/prefer-signal-model': 'error',
       '@angular-eslint/require-lifecycle-on-prototype': 'error',
-      '@angular-eslint/no-implicit-take-until-destroyed': 'error',
       // Avoid empty imports which could cause empty files during build
       '@typescript-eslint/no-import-type-side-effects': 'error',
       // Disallow some erroneous imports
