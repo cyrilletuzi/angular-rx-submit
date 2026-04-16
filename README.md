@@ -129,18 +129,13 @@ export class EditPage {
 ```json
 {
   "rules": {
-    "angular-eslint-injection-context/custom-function-in-injection-context": [
-      "error",
-      {
-        "functions": [
-          {
-            "name": "rxSubmit",
-            "argumentPosition": 1,
-            "argumentPropertyName": "destroyRef"
-          }
-        ]
-      }
-    ]
+    "angular-eslint-injection-context/custom-function-in-injection-context": ["error", {
+      "functions": [{
+          "name": "rxSubmit",
+          "argumentPosition": 1,
+          "argumentPropertyName": "destroyRef"
+      }]
+    }]
   }
 }
 ```

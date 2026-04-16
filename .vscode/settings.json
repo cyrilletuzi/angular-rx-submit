@@ -12,6 +12,9 @@
       "source.organizeImports": "explicit"
     }
   },
+  "[markdown]": {
+    "editor.formatOnSave": false
+  },
   // Regroup related files in explorer, to reduce folders nesting
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.patterns": {
