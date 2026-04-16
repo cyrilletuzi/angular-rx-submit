@@ -123,6 +123,28 @@ export class EditPage {
 
 **Using `rxSubmit()` outside an injection context and without providing a `DestroyRef` will throw the [`NG0203` error](https://angular.dev/errors/NG0203).**
 
+> [!TIP]
+> You can use [angular-eslint-injection-context](https://github.com/cyrilletuzi/angular-eslint-injection-context) to enforce that with the following configuration:
+
+```json
+{
+  "rules": {
+    "angular-eslint-injection-context/custom-function-in-injection-context": [
+      "error",
+      {
+        "functions": [
+          {
+            "name": "rxSubmit",
+            "argumentPosition": 1,
+            "argumentPropertyName": "destroyRef"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
 ### Subscription
 
 Unsubscribing is _not_ needed, `rxSubmit()` already does a `takeUntilDestroyed()` internally via the injection context (see above).
