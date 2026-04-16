@@ -134,6 +134,10 @@ export class EditPage {
         "name": "rxSubmit",
         "argumentPosition": 1,
         "argumentPropertyName": "destroyRef"
+      }, {
+        "name": "rxSubmission",
+        "argumentPosition": 0,
+        "argumentPropertyName": "destroyRef"
       }]
     }]
   }
