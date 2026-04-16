@@ -131,9 +131,9 @@ export class EditPage {
   "rules": {
     "angular-eslint-injection-context/custom-function-in-injection-context": ["error", {
       "functions": [{
-          "name": "rxSubmit",
-          "argumentPosition": 1,
-          "argumentPropertyName": "destroyRef"
+        "name": "rxSubmit",
+        "argumentPosition": 1,
+        "argumentPropertyName": "destroyRef"
       }]
     }]
   }
