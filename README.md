@@ -9,7 +9,7 @@ RxJS interoperability for Angular signal forms, with the `rxSubmit()` function, 
 More details about the advantages of `rxSubmit()` are available in the "Problems solved" section below.
 
 > [!NOTE]
-> Find this tool useful? I’m open to freelance & full-time opportunities.
+> Find this library useful? I’m open to freelance & full-time opportunities.
 > Feel free to reach out on [LinkedIn](https://www.linkedin.com/in/cyrilletuzi/) or [Bluesky](https://bsky.app/profile/cyrilletuzi.com).
 
 ## Getting started
