@@ -16,7 +16,7 @@ More details about the advantages of `rxSubmit()` are available in the "Problems
 
 ### Status
 
-> [!CAUTION]
+> [!IMPORTANT]
 > Angular signal forms are still marked as expertimental, which means breaking changes can happen at any time; which could break this library too. So this library is marked as experimental too for now.
 
 ### Requirements
