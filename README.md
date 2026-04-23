@@ -291,11 +291,9 @@ It complexifies things a lot, and should be repeated in each form. `rxSubmit()` 
 
 ## Why not in Angular directly?
 
-I personnally think `rxSubmit()` should be part of `@angular/rxjs-interop`.
+I personnally think `rxSubmit()` should be part of `@angular/core/rxjs-interop`.
 
-For now, the Angular team has discarded [this request](https://github.com/angular/angular/issues/65199) (from someone else), without allowing proper discussion about it.
-
-One can feel free to advocate for it if one want.
+For now, the Angular team has discarded [this request](https://github.com/angular/angular/issues/67827), but it is still discussed in [this other one]().
 
 ## Full example
 
