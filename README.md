@@ -69,13 +69,11 @@ export class EditPage {
 
 A more complete example is available in the "Full example" section below, and a real-word example is available in the [demo app](./app-demo/src/app/app.ts).
 
-Also, an alternative using the form `submission` configuration is available in the "rxSubmission" section below.
-
 ## Common issues
 
 ### Injection context
 
-One advantage of `rxSubmit()` is automatic cancellation (if the user leaves the page).
+One advantage of `rxSubmit()` is automatic cancellation of the post-submit flow (if the user leaves the page).
 
 But for that to work, like many other Angular functions (`takeUntilDestroyed()`, `toSignal()`...), **it requires an injection context**. `rxSubmit()` follows the same pattern as those other similar Angular functions, with 2 options:
 
@@ -134,10 +132,6 @@ export class EditPage {
       "functions": [{
         "name": "rxSubmit",
         "argumentPosition": 1,
-        "argumentPropertyName": "destroyRef"
-      }, {
-        "name": "rxSubmission",
-        "argumentPosition": 0,
         "argumentPropertyName": "destroyRef"
       }]
     }]
@@ -271,7 +265,12 @@ where `somePromise()` implies a HTTP request to the server. Let us say the reque
 
 In addition to a bad user experience (UX), it can also provokes technical issues, like keeping useless things in memory or accessing to component-related things that have been destroyed in the meantime.
 
-With `rxSubmit()`, all the process will be automatically cancelled if the user leaves the page.
+With `rxSubmit()`, the process post-submit will be automatically cancelled if the user leaves the page.
+
+> [!IMPORTANT]
+> The `rxSubmit()` observable is automatically cancelled, but _not_ the `action` observable. Indeed, nearly all the times, the `action` when submitting a form is a POST HTTP request (or more generally a mutation operation), and it is not a good practice to automatically cancel such operations. So be sure to respect where things belong:
+> - in the `action`: only the mutation operation and its transformation to a `TreeValidationResult`
+> - in `rxSubmit().subscribe()`: the UI changes that should happen only if the user is still on the page
 
 ### Consistency
 
@@ -284,16 +283,15 @@ A given project should be consistent, and having similar actions sometimes Obser
 One could transform an Observable to a Promise, but doing so in the `submit()` scenario is not as trivial as it seems, as it can be seen in the [source code](./lib/src/lib/rx-submit.ts), which shows multiple pitfalls:
 
 - there is not just 1 but 2 Observable <=> Promise transformations
-- there is thus 2 cancellation to manage
-- if the first `takeUntilDestroyed()` happens, the Observable will be empty, and it makes `firstValueFrom()` throws an error, which would trigger the last error callcack (where things like displaying a snack bar / toast could happen); this is managed by the `defaultValue`
+- there is a cancellation to manage, but only where it is relevant
 
-It complexifies things a lot, and should be repeated in each form. `rxSubmit()` is a simple function ready to use.
+It complexifies things, and should be repeated in each form. `rxSubmit()` is a simple function ready to use.
 
 ## Why not in Angular directly?
 
 I personnally think `rxSubmit()` should be part of `@angular/core/rxjs-interop`.
 
-For now, the Angular team has discarded [this request](https://github.com/angular/angular/issues/67827), but it is still discussed in [this other one]().
+It is discueed in [this request](https://github.com/angular/angular/issues/67827).
 
 ## Full example
 
@@ -382,96 +380,3 @@ export class EditPage {
 ```
 
 A real-word example is also available in the [demo app](./app-demo/src/app/app.ts).
-
-## rxSubmission
-
-This library also provides the `rxSubmission()` function, to achieve the same goal but directly inside the form `submission` configuration.
-
-```typescript
-import { rxSubmission } from 'angular-rx-submit';
-
-@Component({
-  imports: [FormRoot],
-  template: `
-    <form [formRoot]="form">
-      <label>
-        Username
-        <input type="text" [formField]="form.name" />
-      </label>
-      <button type="submit">Save</button>
-    </form>
-  `,
-})
-export class EditPage {
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly formModel = signal<User>({ name: '' });
-  protected readonly form = form(this.formModel, {
-    submission: rxSubmission({
-      action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
-    }),
-  });
-}
-```
-
-This approach may seem simpler at first, but has multiple pitfalls:
-
-- forgetting to handle errors
-- breaking the responsibility principle by doing hundred of different things at the same place
-- acting in a property declaration instead of a method
-- managing actions after success (like navigating to another page) is more confusing
-- order of actions: the example with `rxSubmission()` below is not exactly the same as one with `rxSubmit()` above:
-  - with `rxSubmit()`, things happen in 2 steps, in the expected order: first the submission management, then the navigation to another page
-  - with `rxSubmission()`, as there is only 1 step, the navigation to another page must be managed in the `action` observable, and so it will happen _before_ the submission management actually ends
-
-So `rxSubmit()` is recommended, and if one sticks to `rxSubmission()` for very simple cases, it is recommended to at least:
-
-- handle the error
-- do a dedicated method
-
-```typescript
-import { rxSubmission } from 'angular-rx-submit';
-
-@Component({
-  imports: [FormRoot],
-  template: `
-    <form [formRoot]="form">
-      <label>
-        Username
-        <input type="text" [formField]="form.name" />
-      </label>
-      <button type="submit">Save</button>
-    </form>
-  `,
-})
-export class EditPage {
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly formModel = signal<User>({ name: '' });
-  protected readonly form = form(this.formModel, {
-    submission: rxSubmission({
-      action: (submittedForm) => this.submit(submittedForm),
-    }),
-  });
-
-  private submit(submittedForm: FieldTree<User>): Observable<TreeValidationResult> {
-    return someObservableOfTreeValidationResult(submittedForm().value()).pipe(
-      tap({
-        next: (treeValidationResult) => {
-          // Success = no error
-          if (!treeValidationResult) {
-            // Manage success here (for example: redirecting to another page)
-            this.router.navigate(['/some/other/page']).catch(() => {});
-          }
-        },
-        error: (error: unknown) => {
-          // Manage error here (for example: displaying service is unavailable)
-          if (error instanceof HttpErrorResponse && error.status === 500) {
-            console.log(`Display service unavailable`);
-          } else {
-            console.log(`Display unexpected error`);
-          }
-        },
-      }),
-    );
-  }
-}
-```

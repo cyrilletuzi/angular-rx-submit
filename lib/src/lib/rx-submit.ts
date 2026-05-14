@@ -64,15 +64,8 @@ export function rxSubmit<TModel>(
     submit(form, {
       // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Angular internal, cannot change readonly here
       action: (submittedForm, detail) =>
-        /* Transform the action Observable into a Promise */
-        firstValueFrom(
-          /* Pass the form to the user-provided and Observable-based action callback */
-          action(submittedForm, detail).pipe(takeUntilDestroyed(destroyRef)),
-          {
-            /* If `takeUntilDestroyed()` happens, returns `undefined` instead of throwing an `EmptyError` */
-            defaultValue: undefined,
-          },
-        ),
+        /* Transform the action Observable into a Promise and pass the form to the user-provided and Observable-based action callback */
+        firstValueFrom(action(submittedForm, detail)),
       ...otherOptions,
     }),
   ).pipe(takeUntilDestroyed(destroyRef));

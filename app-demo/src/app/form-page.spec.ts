@@ -1,15 +1,15 @@
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { App } from './app';
+import { FormPage } from './form-page';
 import type { ApiResponse } from './http-api';
 
-describe('App', () => {
+describe('FormPage', () => {
   let httpTesting: HttpTestingController;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App],
+      imports: [FormPage],
       providers: [provideHttpClientTesting()],
     }).compileComponents();
 
@@ -17,7 +17,7 @@ describe('App', () => {
   });
 
   it('should display success', async () => {
-    const fixture = TestBed.createComponent(App);
+    const fixture = TestBed.createComponent(FormPage);
     await fixture.whenStable();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
@@ -39,7 +39,7 @@ describe('App', () => {
   });
 
   it('should display validation error', async () => {
-    const fixture = TestBed.createComponent(App);
+    const fixture = TestBed.createComponent(FormPage);
     await fixture.whenStable();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
@@ -64,7 +64,7 @@ describe('App', () => {
   });
 
   it('should display global error', async () => {
-    const fixture = TestBed.createComponent(App);
+    const fixture = TestBed.createComponent(FormPage);
     await fixture.whenStable();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
