@@ -1,6 +1,6 @@
 {
   "name": "angular-rx-submit",
-  "version": "21.2.1",
+  "version": "21.3.0",
   "scripts": {
     "ng": "ng",
     "start-demo": "ng serve app-demo",
