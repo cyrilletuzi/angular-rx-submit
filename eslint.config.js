@@ -66,7 +66,13 @@ module.exports = defineConfig([
       'no-shadow': 'off',
       '@typescript-eslint/no-shadow': 'error',
       '@typescript-eslint/prefer-readonly': 'error',
-      '@typescript-eslint/prefer-readonly-parameter-types': 'error',
+      '@typescript-eslint/prefer-readonly-parameter-types': [
+        'error',
+        {
+          ignoreInferredTypes: true,
+          treatMethodsAsReadonly: true,
+        },
+      ],
       // Loosen some annoying and inadequate empty rules
       'no-empty': [
         'error',
