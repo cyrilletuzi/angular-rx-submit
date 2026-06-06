@@ -43,6 +43,11 @@
     "typescript-eslint": "^8.60.1",
     "vitest": "^4.1.8"
   },
+  "overrides": {
+    "angular-eslint": {
+      "@angular/cli": "$@angular/cli"
+    }
+  },
   "allowScripts": {
     "@parcel/watcher": false,
     "esbuild": false,
