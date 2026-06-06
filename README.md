@@ -14,18 +14,10 @@ More details about the advantages of `rxSubmit()` are available in the "Problems
 
 ## Getting started
 
-### Status
-
-> [!IMPORTANT]
-> Angular signal forms are still marked as expertimental, which means breaking changes can happen at any time; which could break this library too. So this library is marked as experimental too for now.
-
 ### Requirements
 
-- Angular version >= 21.2.0
+- Angular version >= 22
 - RxJS version >= 7.6.0
-
-> [!NOTE]
-> Angular versions 21.0 and 21.1 are _not_ supported, as this library requires a new `submit()` feature introduced in version 21.2.
 
 > [!NOTE]
 > While Angular still allows lower RxJS versions, versions <7.6 are _not_ supported by this library.

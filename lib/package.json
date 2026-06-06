@@ -17,8 +17,8 @@
     "url": "https://github.com/cyrilletuzi/angular-rx-submit"
   },
   "peerDependencies": {
-    "@angular/core": "^21.2.0",
-    "@angular/forms": "^21.2.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
     "rxjs": "^7.6.0"
   },
   "dependencies": {

@@ -8,8 +8,7 @@ import type { Observable } from 'rxjs';
  *
  * @see {@link rxSubmit}
  *
- * @version 21.2.0
- * @experimental
+ * @version 22.0.0
  */
 export interface RxFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
   FormSubmitOptions<TRootModel, TSubmittedModel>,

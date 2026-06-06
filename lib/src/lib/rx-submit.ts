@@ -41,8 +41,7 @@ import type { RxFormSubmitOptions } from './rx-form-submit-options';
  *   }
  * }
  *
- * @version 21.2.0
- * @experimental
+ * @version 22.0.0
  */
 export function rxSubmit<TModel>(
   form: FieldTree<TModel>,
