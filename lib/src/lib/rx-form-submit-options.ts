@@ -10,10 +10,10 @@ import type { Observable } from 'rxjs';
  *
  * @version 22.0.0
  */
-export interface RxFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
-  FormSubmitOptions<TRootModel, TSubmittedModel>,
+export type RxFormSubmitOptions<TRootModel, TSubmittedModel> = Omit<
+  Readonly<FormSubmitOptions<TRootModel, TSubmittedModel>>,
   'action'
-> {
+> & {
   /**
    * Required function to run when submitting the form (when form is valid).
    *
@@ -38,4 +38,4 @@ export interface RxFormSubmitOptions<TRootModel, TSubmittedModel> extends Omit<
    * Using `rxSubmit()` outside an injection context and without providing a `DestroyRef` will throw the `NG0203` runtime error: https://angular.dev/errors/NG0203
    */
   readonly destroyRef?: Readonly<DestroyRef> | undefined;
-}
+};

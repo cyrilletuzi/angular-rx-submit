@@ -59,7 +59,6 @@ export function rxSubmit<TModel>(
    * otherwise with `from()`, `submit()` would be called immediately. */
   return defer(() =>
     submit(form, {
-      // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Angular internal, cannot change readonly here
       action: (submittedForm, detail) =>
         /* Transform the action Observable into a Promise and pass the form to the user-provided and Observable-based action callback */
         firstValueFrom(action(submittedForm, detail)),
