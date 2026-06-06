@@ -319,9 +319,7 @@ export function mapApiResponseToTreeValidationResult(response: ApiResponse): Tre
       }; // a `ValidationError.WithOptionalFieldTree`, or an array of that
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class Api {
   private readonly httpClient = inject(HttpClient);
 
