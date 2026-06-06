@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { form, FormField } from '@angular/forms/signals';
 import { rxSubmit } from 'angular-rx-submit';
 import { map } from 'rxjs';
@@ -29,7 +29,6 @@ import { HttpApi } from './http-api';
       }
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormPage {
   private readonly destroyRef = inject(DestroyRef);
