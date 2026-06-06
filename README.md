@@ -40,16 +40,14 @@ More details about the advantages of `rxSubmit()` are available in the "Problems
 import { rxSubmit } from 'angular-rx-submit';
 
 @Component({
-  template: `<form novalidate (submit)="save($event)"></form>`,
+  template: `<form [formRoot]="form" (submit)="save()"></form>`,
 })
 export class EditPage {
   private readonly destroyRef = inject(DestroyRef);
   private readonly formModel = signal<User>({ name: '' });
   protected readonly form = form(this.formModel);
 
-  protected save(event: Event): void {
-    event.preventDefault();
-
+  protected save(): void {
     rxSubmit(this.form, {
       action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
       destroyRef: this.destroyRef,
@@ -81,16 +79,14 @@ But for that to work, like many other Angular functions (`takeUntilDestroyed()`,
 
 ```typescript
 @Component({
-  template: ` <form novalidate (submit)="save($event)"></form> `,
+  template: `<form [formRoot]="form" (submit)="save()"></form>`,
 })
 export class EditPage {
   private readonly destroyRef = inject(DestroyRef); // ⬅️
   private readonly formModel = signal<User>({ name: '' });
   protected readonly form = form(this.formModel);
 
-  protected save(event: Event): void {
-    event.preventDefault();
-
+  protected save(): void {
     rxSubmit(this.form, {
       action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
       destroyRef: this.destroyRef, // ⬅️
@@ -103,7 +99,7 @@ export class EditPage {
 
 ```typescript
 @Component({
-  template: `<form novalidate (submit)="save($event)"></form>`,
+  template: `<form [formRoot]="form" (submit)="save()"></form>`,
 })
 export class EditPage {
   private readonly formModel = signal<User>({ name: '' });
@@ -113,8 +109,7 @@ export class EditPage {
     action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
   });
 
-  protected save(event: Event): void {
-    event.preventDefault();
+  protected save(): void {
     this.submitObservable.subscribe();
   }
 }
@@ -232,7 +227,7 @@ Let us take a common and basic example with the Promise-based `submit()`:
 
 ```typescript
 @Component({
-  template: `<form novalidate (submit)="save($event)"></form>`,
+  template: `<form [formRoot]="form" (submit)="save()"></form>`,
 })
 export class EditPage {
   private readonly router = inject(Router);
@@ -240,9 +235,7 @@ export class EditPage {
   private readonly formModel = signal<User>({ name: '' });
   protected readonly form = form(this.formModel);
 
-  protected save(event: Event): void {
-    event.preventDefault();
-
+  protected save(): void {
     submit(this.form, {
       action: async (submittedForm) => somePromise(submittedForm().value()),
     })
@@ -330,7 +323,7 @@ export class Api {
 
 @Component({
   template: `
-    <form novalidate (submit)="save($event)">
+    <form [formRoot]="form" (submit)="save()">
       <label>
         Username
         <input type="text" [formField]="form.name" />
@@ -349,9 +342,7 @@ export class EditPage {
   });
   protected readonly form = form(formModel);
 
-  protected save(event: Event): void {
-    event.preventDefault();
-
+  protected save(): void {
     rxSubmit(this.form, {
       action: (submittedForm) =>
         // Like the `submit()` action Promise, the Observable must return a `TreeValidationResult`
