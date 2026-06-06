@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { form, FormField } from '@angular/forms/signals';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { form, FormField, FormRoot } from '@angular/forms/signals';
 import { rxSubmit } from 'angular-rx-submit';
 import { map } from 'rxjs';
 import { mapApiResponseToValidationTreeResult } from './api-adapters';
@@ -9,9 +9,9 @@ import { HttpApi } from './http-api';
 
 @Component({
   selector: 'app-some-form',
-  imports: [FormField],
+  imports: [FormRoot, FormField],
   template: `
-    <form novalidate (submit)="save($event)">
+    <form [formRoot]="form" (submit)="save()">
       <label>
         Name:
         <input type="text" [formField]="form.name" />
@@ -29,7 +29,6 @@ import { HttpApi } from './http-api';
       }
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormPage {
   private readonly destroyRef = inject(DestroyRef);
@@ -42,9 +41,7 @@ export class FormPage {
 
   protected readonly globalError = signal<string | undefined>(undefined);
 
-  protected save(event: Event): void {
-    event.preventDefault();
-
+  protected save(): void {
     this.globalError.set(undefined);
 
     rxSubmit(this.form, {

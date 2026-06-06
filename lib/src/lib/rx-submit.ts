@@ -17,16 +17,14 @@ import type { RxFormSubmitOptions } from './rx-form-submit-options';
  *
  * @example
  * Component({
- *   template: `<form novalidate (submit)="save($event)"></form>`,
+ *   template: `<form [formRoot]="form" (submit)="save()"></form>`,
  * })
  * export class EditPage {
  *   private readonly destroyRef = inject(DestroyRef);
  *   private readonly formModel = signal({ userName: '' });
  *   protected readonly form = form(this.formModel);
  *
- *   protected save(event: Event): void {
- *     event.preventDefault();
- *
+ *   protected save(): void {
  *     rxSubmit(this.form, {
  *       action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
  *       destroyRef: this.destroyRef,
@@ -43,8 +41,7 @@ import type { RxFormSubmitOptions } from './rx-form-submit-options';
  *   }
  * }
  *
- * @version 21.2.0
- * @experimental
+ * @version 22.0.0
  */
 export function rxSubmit<TModel>(
   form: FieldTree<TModel>,
@@ -62,7 +59,6 @@ export function rxSubmit<TModel>(
    * otherwise with `from()`, `submit()` would be called immediately. */
   return defer(() =>
     submit(form, {
-      // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Angular internal, cannot change readonly here
       action: (submittedForm, detail) =>
         /* Transform the action Observable into a Promise and pass the form to the user-provided and Observable-based action callback */
         firstValueFrom(action(submittedForm, detail)),
