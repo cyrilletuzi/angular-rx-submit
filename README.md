@@ -12,6 +12,10 @@ More details about the advantages of `rxSubmit()` are available in the "Problems
 > Find this library useful? I’m open to freelance & full-time opportunities.
 > Feel free to reach out on [LinkedIn](https://www.linkedin.com/in/cyrilletuzi/) or [Bluesky](https://bsky.app/profile/cyrilletuzi.com).
 
+## Status
+
+Signal forms are now stable in Angular 22, but this library is still an experiment, in the sense that the feature is stable, but the actual value of publishing it as long-term library is still evaluated.
+
 ## Getting started
 
 ### Requirements
