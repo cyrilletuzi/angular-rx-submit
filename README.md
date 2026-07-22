@@ -280,7 +280,7 @@ It complexifies things, and should be repeated in each form. `rxSubmit()` is a s
 
 I personnally think `rxSubmit()` should be part of `@angular/core/rxjs-interop`.
 
-It is discueed in [this request](https://github.com/angular/angular/issues/67827).
+It is discussed in [this request](https://github.com/angular/angular/issues/67827).
 
 ## Full example
 
