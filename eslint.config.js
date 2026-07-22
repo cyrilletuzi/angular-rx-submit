@@ -98,25 +98,27 @@ module.exports = defineConfig([
           allowWithDecorator: true, // some Angular classes can be empty
         },
       ],
-      // Enforce Angular good practices
+      // Disable recommended Angular ESLint rules already managed by other rules
+      '@angular-eslint/contextual-lifecycle': 'off',
+      '@angular-eslint/no-empty-lifecycle-method': 'off',
+      '@angular-eslint/prefer-on-push-component-change-detection': 'off',
+      '@angular-eslint/use-lifecycle-interface': 'off',
+      // Additional rules to enforce Angular good practices
+      '@angular-eslint/prefer-output-readonly': 'error',
       '@angular-eslint/consistent-component-styles': 'error',
-      '@angular-eslint/sort-lifecycle-methods': 'error',
-      '@angular-eslint/contextual-decorator': 'error',
       '@angular-eslint/no-attribute-decorator': 'error',
       '@angular-eslint/no-input-prefix': 'error',
-      '@angular-eslint/no-lifecycle-call': 'error',
       '@angular-eslint/no-pipe-impure': 'error',
       '@angular-eslint/no-queries-metadata-property': 'error',
       '@angular-eslint/use-component-view-encapsulation': 'error',
-      '@angular-eslint/use-injectable-provided-in': 'error',
-      '@angular-eslint/no-async-lifecycle-method': 'error',
+      '@angular-eslint/prefer-service-decorator': 'error',
       '@angular-eslint/runtime-localize': 'error',
       '@angular-eslint/prefer-host-metadata-property': 'error',
-      '@angular-eslint/prefer-signals': 'error',
       '@angular-eslint/no-uncalled-signals': 'error',
-      '@angular-eslint/prefer-output-emitter-ref': 'error',
       '@angular-eslint/prefer-signal-model': 'error',
-      '@angular-eslint/require-lifecycle-on-prototype': 'error',
+      '@angular-eslint/computed-must-return': 'error',
+      '@angular-eslint/no-developer-preview': 'error',
+      '@angular-eslint/no-experimental': 'error',
       // Avoid empty imports which could cause empty files during build
       '@typescript-eslint/no-import-type-side-effects': 'error',
       // Disallow some erroneous imports
@@ -157,6 +159,8 @@ module.exports = defineConfig([
         },
       ],
       '@angular-eslint/template/button-has-type': 'error',
+      '@angular-eslint/template/require-switch-default': 'error',
+      '@angular-eslint/template/no-outerhtml': 'error',
       // Enforce more accessibility
       '@angular-eslint/template/no-positive-tabindex': 'error',
     },
