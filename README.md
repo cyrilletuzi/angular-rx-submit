@@ -114,12 +114,12 @@ export class EditPage {
 **Using `rxSubmit()` outside an injection context and without providing a `DestroyRef` will throw the [`NG0203` error](https://angular.dev/errors/NG0203).**
 
 > [!TIP]
-> You can use [angular-eslint-injection-context](https://github.com/cyrilletuzi/angular-eslint-injection-context) to enforce that with the following configuration:
+> You can use [eslint-plugin-angular-modern](https://github.com/cyrilletuzi/eslint-plugin-angular-modern) to enforce that with the following configuration:
 
 ```json
 {
   "rules": {
-    "angular-eslint-injection-context/custom-function-in-injection-context": ["error", {
+    "eslint-plugin-angular-modern/custom-function-in-injection-context": ["error", {
       "functions": [{
         "name": "rxSubmit",
         "argumentPosition": 1,

@@ -9,8 +9,7 @@ const eslint = require('@eslint/js');
 const { defineConfig } = require('eslint/config');
 const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
-const angularEslintInjectionContext = require('angular-eslint-injection-context');
-const angularEslintZoneless = require('angular-eslint-zoneless');
+const angularModern = require('eslint-plugin-angular-modern');
 
 module.exports = defineConfig([
   {
@@ -20,8 +19,7 @@ module.exports = defineConfig([
       tseslint.configs.strictTypeChecked,
       tseslint.configs.stylisticTypeChecked,
       angular.configs.tsRecommended,
-      angularEslintInjectionContext.configs.recommended,
-      angularEslintZoneless.configs.strict,
+      angularModern.configs.recommended,
     ],
     languageOptions: {
       parserOptions: {
