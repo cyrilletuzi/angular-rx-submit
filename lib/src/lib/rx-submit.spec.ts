@@ -9,6 +9,7 @@ import { rxSubmit } from './rx-submit';
 describe('rxSubmit ', () => {
   describe('with explicit DestroyRef', () => {
     @Component({
+      selector: 'spec-test',
       template: '',
     })
     class TestComponent {
@@ -199,6 +200,7 @@ describe('rxSubmit ', () => {
         let success: boolean;
 
         @Component({
+          selector: 'spec-test',
           template: '',
         })
         class TestComponent {
@@ -242,6 +244,7 @@ describe('rxSubmit ', () => {
     it('should complete when cancelled', () =>
       new Promise((resolve, reject) => {
         @Component({
+          selector: 'spec-test',
           template: '',
         })
         class TestComponent {
@@ -284,6 +287,7 @@ describe('rxSubmit ', () => {
   describe('outside injection context', () => {
     it('should throw if outside injection context and no DestroyRef is provided', () => {
       @Component({
+        selector: 'spec-test',
         template: '',
       })
       class TestComponent {
