@@ -12,9 +12,9 @@ export interface ApiResponse {
 
 @Service()
 export class HttpApi {
-  private readonly httpClient = inject(HttpClient);
+  readonly #httpClient = inject(HttpClient);
 
   postData(body: User): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>('/api/save', body);
+    return this.#httpClient.post<ApiResponse>('/api/save', body);
   }
 }

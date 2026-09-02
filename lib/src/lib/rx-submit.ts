@@ -20,14 +20,14 @@ import type { RxFormSubmitOptions } from './rx-form-submit-options';
  *   template: `<form [formRoot]="form" (submit)="save()"></form>`,
  * })
  * export class EditPage {
- *   private readonly destroyRef = inject(DestroyRef);
- *   private readonly formModel = signal({ userName: '' });
- *   protected readonly form = form(this.formModel);
+ *   readonly #destroyRef = inject(DestroyRef);
+ *   readonly #formModel = signal({ userName: '' });
+ *   protected readonly form = form(this.#formModel);
  *
  *   protected save(): void {
  *     rxSubmit(this.form, {
  *       action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
- *       destroyRef: this.destroyRef,
+ *       destroyRef: this.#destroyRef,
  *     }).subscribe({
  *       next: (success) => {
  *         if (success) {

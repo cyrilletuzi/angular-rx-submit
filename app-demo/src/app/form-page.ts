@@ -31,13 +31,13 @@ import { HttpApi } from './http-api';
   `,
 })
 export class FormPage {
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly httpApi = inject(HttpApi);
+  readonly #destroyRef = inject(DestroyRef);
+  readonly #httpApi = inject(HttpApi);
 
-  private readonly formModel = signal<User>({
+  readonly #formModel = signal<User>({
     name: '',
   });
-  protected readonly form = form(this.formModel);
+  protected readonly form = form(this.#formModel);
 
   protected readonly globalError = signal<string | undefined>(undefined);
 
@@ -46,10 +46,10 @@ export class FormPage {
 
     rxSubmit(this.form, {
       action: (submittedForm) =>
-        this.httpApi
+        this.#httpApi
           .postData(submittedForm().value())
           .pipe(map(mapApiResponseToValidationTreeResult)),
-      destroyRef: this.destroyRef,
+      destroyRef: this.#destroyRef,
     }).subscribe({
       next: (success) => {
         if (success) {

@@ -13,11 +13,10 @@ describe('rxSubmit ', () => {
       template: '',
     })
     class TestComponent {
-      readonly destroyRef = inject(DestroyRef);
-      private readonly formModel = signal({
+      readonly #formModel = signal({
         test: '',
       });
-      readonly form = form(this.formModel);
+      readonly form = form(this.#formModel);
     }
 
     let componentFixture: ComponentFixture<TestComponent>;
@@ -27,7 +26,7 @@ describe('rxSubmit ', () => {
     beforeEach(() => {
       componentFixture = TestBed.createComponent(TestComponent);
       componentInstance = componentFixture.componentInstance;
-      destroyRef = componentInstance.destroyRef;
+      destroyRef = componentFixture.componentRef.injector.get(DestroyRef);
     });
 
     it('should succeed when returning undefined', () =>
@@ -204,22 +203,22 @@ describe('rxSubmit ', () => {
           template: '',
         })
         class TestComponent {
-          private readonly formModel = signal({
+          readonly #formModel = signal({
             test: '',
           });
-          readonly form = form(this.formModel);
-          private readonly submitObservable: Observable<boolean>;
+          readonly form = form(this.#formModel);
+          readonly #submitObservable: Observable<boolean>;
 
           constructor() {
             const observable: Observable<TreeValidationResult> = scheduled(
               of(undefined),
               asyncScheduler,
             );
-            this.submitObservable = rxSubmit(this.form, { action: () => observable });
+            this.#submitObservable = rxSubmit(this.form, { action: () => observable });
           }
 
           save(): void {
-            this.submitObservable.subscribe({
+            this.#submitObservable.subscribe({
               next: (result) => {
                 success = result;
               },
@@ -248,20 +247,20 @@ describe('rxSubmit ', () => {
           template: '',
         })
         class TestComponent {
-          private readonly destroyRef = inject(DestroyRef);
-          private readonly formModel = signal({
+          readonly #destroyRef = inject(DestroyRef);
+          readonly #formModel = signal({
             test: '',
           });
-          readonly form = form(this.formModel);
-          private readonly submitObservable: Observable<boolean>;
+          readonly form = form(this.#formModel);
+          readonly #submitObservable: Observable<boolean>;
 
           constructor() {
             const observable: Observable<TreeValidationResult> = of(undefined).pipe(delay(2000));
-            this.submitObservable = rxSubmit(this.form, { action: () => observable });
+            this.#submitObservable = rxSubmit(this.form, { action: () => observable });
           }
 
           save(): void {
-            this.submitObservable.subscribe({
+            this.#submitObservable.subscribe({
               next: () => {
                 reject();
               },
@@ -269,7 +268,7 @@ describe('rxSubmit ', () => {
                 reject();
               },
               complete: () => {
-                const destroyed = this.destroyRef.destroyed;
+                const destroyed = this.#destroyRef.destroyed;
                 expect(destroyed).toBe(true);
 
                 resolve(undefined);
@@ -291,10 +290,10 @@ describe('rxSubmit ', () => {
         template: '',
       })
       class TestComponent {
-        private readonly formModel = signal({
+        readonly #formModel = signal({
           test: '',
         });
-        private readonly form = form(this.formModel);
+        protected readonly form = form(this.#formModel);
 
         save(): void {
           const observable: Observable<TreeValidationResult> = scheduled(

@@ -39,14 +39,14 @@ import { rxSubmit } from 'angular-rx-submit';
   template: `<form [formRoot]="form" (submit)="save()"></form>`,
 })
 export class EditPage {
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly formModel = signal<User>({ name: '' });
-  protected readonly form = form(this.formModel);
+  readonly #destroyRef = inject(DestroyRef);
+  readonly #formModel = signal<User>({ name: '' });
+  protected readonly form = form(this.#formModel);
 
   protected save(): void {
     rxSubmit(this.form, {
       action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
-      destroyRef: this.destroyRef,
+      destroyRef: this.#destroyRef,
     }).subscribe({
       next: (success) => {
         if (success) {
@@ -78,14 +78,14 @@ But for that to work, like many other Angular functions (`takeUntilDestroyed()`,
   template: `<form [formRoot]="form" (submit)="save()"></form>`,
 })
 export class EditPage {
-  private readonly destroyRef = inject(DestroyRef); // ⬅️
-  private readonly formModel = signal<User>({ name: '' });
-  protected readonly form = form(this.formModel);
+  readonly #destroyRef = inject(DestroyRef); // ⬅️
+  readonly #formModel = signal<User>({ name: '' });
+  protected readonly form = form(this.#formModel);
 
   protected save(): void {
     rxSubmit(this.form, {
       action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
-      destroyRef: this.destroyRef, // ⬅️
+      destroyRef: this.#destroyRef, // ⬅️
     }).subscribe();
   }
 }
@@ -98,15 +98,15 @@ export class EditPage {
   template: `<form [formRoot]="form" (submit)="save()"></form>`,
 })
 export class EditPage {
-  private readonly formModel = signal<User>({ name: '' });
-  protected readonly form = form(this.formModel);
+  readonly #formModel = signal<User>({ name: '' });
+  protected readonly form = form(this.#formModel);
 
-  private readonly submitObservable = rxSubmit(this.form, {
+  readonly #submitObservable = rxSubmit(this.form, {
     action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
   });
 
   protected save(): void {
-    this.submitObservable.subscribe();
+    this.#submitObservable.subscribe();
   }
 }
 ```
@@ -140,13 +140,13 @@ But **subscribing is required**, even if there is nothing something specific to 
 // ❌ Nothing happens
 rxSubmit(this.form, () => {
   action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
-  destroyRef: this.destroyRef,
+  destroyRef: this.#destroyRef,
 });
 
 // ✅ Triggers submission
 rxSubmit(this.form, {
   action: (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
-  destroyRef: this.destroyRef,
+  destroyRef: this.#destroyRef,
 }).subscribe();
 ```
 
@@ -157,7 +157,7 @@ As for any Observable, handling errors is recommended. If the provided Observabl
 ```typescript
 rxSubmit(this.form, {
   action: () => (submittedForm) => someObservableOfTreeValidationResult(submittedForm().value()),
-  destroyRef: this.destroyRef,
+  destroyRef: this.#destroyRef,
 }).subscribe({
   next: (success) => {
     if (success) {
@@ -210,8 +210,8 @@ As with the official `submit()`, do _not_ trigger `rxSubmit()` multiple times in
   </form>`,
 })
 export class EditPage {
-  private readonly formModel = signal<User>({ name: '' });
-  protected readonly form = form(this.formModel);
+  readonly #formModel = signal<User>({ name: '' });
+  protected readonly form = form(this.#formModel);
 }
 ```
 
@@ -226,10 +226,10 @@ Let us take a common and basic example with the Promise-based `submit()`:
   template: `<form [formRoot]="form" (submit)="save()"></form>`,
 })
 export class EditPage {
-  private readonly router = inject(Router);
+  readonly #router = inject(Router);
 
-  private readonly formModel = signal<User>({ name: '' });
-  protected readonly form = form(this.formModel);
+  readonly #formModel = signal<User>({ name: '' });
+  protected readonly form = form(this.#formModel);
 
   protected save(): void {
     submit(this.form, {
@@ -237,7 +237,7 @@ export class EditPage {
     })
       .then((success) => {
         if (success) {
-          this.router.navigate(['/some/other/page']).catch(() => {});
+          this.#router.navigate(['/some/other/page']).catch(() => {});
         }
       })
       .catch(() => {});
@@ -310,10 +310,10 @@ export function mapApiResponseToTreeValidationResult(response: ApiResponse): Tre
 
 @Service()
 export class Api {
-  private readonly httpClient = inject(HttpClient);
+  readonly #httpClient = inject(HttpClient);
 
   save(body: EditModel): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>('/api/save', body);
+    return this.#httpClient.post<ApiResponse>('/api/save', body);
   }
 }
 
@@ -329,26 +329,26 @@ export class Api {
   `,
 })
 export class EditPage {
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly httpApi = inject(HttpApi);
-  private readonly router = inject(Router);
+  readonly #destroyRef = inject(DestroyRef);
+  readonly #httpApi = inject(HttpApi);
+  readonly #router = inject(Router);
 
-  private readonly formModel = signal<EditModel>({
+  readonly #formModel = signal<EditModel>({
     username: '',
   });
-  protected readonly form = form(formModel);
+  protected readonly form = form(this.#formModel);
 
   protected save(): void {
     rxSubmit(this.form, {
       action: (submittedForm) =>
         // Like the `submit()` action Promise, the Observable must return a `TreeValidationResult`
-        this.httpApi.save(submittedForm().value()).pipe(map(mapApiResponseToTreeValidationResult)),
-      destroyRef: this.destroyRef,
+        this.#httpApi.save(submittedForm().value()).pipe(map(mapApiResponseToTreeValidationResult)),
+      destroyRef: this.#destroyRef,
     }).subscribe({
       next: (success) => {
         if (success) {
           // Manage success here (for example: redirecting to another page)
-          this.router.navigate(['/some/other/page']).catch(() => {});
+          this.#router.navigate(['/some/other/page']).catch(() => {});
         }
       },
       error: (error: unknown) => {
