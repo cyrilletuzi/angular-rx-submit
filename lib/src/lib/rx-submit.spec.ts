@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-promise-reject-errors */
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { form, type TreeValidationResult } from '@angular/forms/signals';
@@ -46,7 +45,7 @@ describe('rxSubmit ', () => {
             success = result;
           },
           error: () => {
-            reject();
+            reject(new Error());
           },
           complete: () => {
             expect(success).toBe(true);
@@ -69,7 +68,7 @@ describe('rxSubmit ', () => {
             success = result;
           },
           error: () => {
-            reject();
+            reject(new Error());
           },
           complete: () => {
             expect(success).toBe(true);
@@ -98,7 +97,7 @@ describe('rxSubmit ', () => {
             success = result;
           },
           error: () => {
-            reject();
+            reject(new Error());
           },
           complete: () => {
             expect(success).toBe(false);
@@ -132,7 +131,7 @@ describe('rxSubmit ', () => {
             success = result;
           },
           error: () => {
-            reject();
+            reject(new Error());
           },
           complete: () => {
             expect(success).toBe(false);
@@ -156,17 +155,16 @@ describe('rxSubmit ', () => {
 
         rxSubmit(componentInstance.form, { action: () => observable, destroyRef }).subscribe({
           next: () => {
-            reject();
+            reject(new Error());
           },
           error: (error: unknown) => {
-            expect(error).toBeInstanceOf(Error);
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-            expect((error as Error).message).toBe(errorMessage);
+            expect.assert(error instanceof Error);
+            expect(error.message).toBe(errorMessage);
 
             resolve(undefined);
           },
           complete: () => {
-            reject();
+            reject(new Error());
           },
         });
       }));
@@ -177,10 +175,10 @@ describe('rxSubmit ', () => {
 
         rxSubmit(componentInstance.form, { action: () => observable, destroyRef }).subscribe({
           next: () => {
-            reject();
+            reject(new Error());
           },
           error: () => {
-            reject();
+            reject(new Error());
           },
           complete: () => {
             expect(destroyRef.destroyed).toBe(true);
@@ -223,7 +221,7 @@ describe('rxSubmit ', () => {
                 success = result;
               },
               error: () => {
-                reject();
+                reject(new Error());
               },
               complete: () => {
                 expect(success).toBe(true);
@@ -262,10 +260,10 @@ describe('rxSubmit ', () => {
           save(): void {
             this.#submitObservable.subscribe({
               next: () => {
-                reject();
+                reject(new Error());
               },
               error: () => {
-                reject();
+                reject(new Error());
               },
               complete: () => {
                 const destroyed = this.#destroyRef.destroyed;

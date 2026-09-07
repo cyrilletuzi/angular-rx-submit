@@ -20,8 +20,8 @@ describe('FormPage', () => {
     const fixture = TestBed.createComponent(FormPage);
     await fixture.whenStable();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    const nativeElement = fixture.nativeElement as HTMLElement;
+    const nativeElement: unknown = fixture.nativeElement;
+    expect.assert(nativeElement instanceof HTMLElement);
     nativeElement.querySelector('button')?.click();
 
     const req = httpTesting.expectOne({
@@ -42,8 +42,8 @@ describe('FormPage', () => {
     const fixture = TestBed.createComponent(FormPage);
     await fixture.whenStable();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    const nativeElement = fixture.nativeElement as HTMLElement;
+    const nativeElement: unknown = fixture.nativeElement;
+    expect.assert(nativeElement instanceof HTMLElement);
     nativeElement.querySelector('button')?.click();
 
     const req = httpTesting.expectOne({
@@ -67,8 +67,8 @@ describe('FormPage', () => {
     const fixture = TestBed.createComponent(FormPage);
     await fixture.whenStable();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    const nativeElement = fixture.nativeElement as HTMLElement;
+    const nativeElement: unknown = fixture.nativeElement;
+    expect.assert(nativeElement instanceof HTMLElement);
     nativeElement.querySelector('button')?.click();
 
     const req = httpTesting.expectOne({

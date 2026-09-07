@@ -13,6 +13,12 @@ const angularModern = require('eslint-plugin-angular-modern');
 
 module.exports = defineConfig([
   {
+    linterOptions: {
+      reportUnusedDisableDirectives: 'error',
+      reportUnusedInlineConfigs: 'error',
+    },
+  },
+  {
     files: ['**/*.ts'],
     extends: [
       eslint.configs.recommended,
