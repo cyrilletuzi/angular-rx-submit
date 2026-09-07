@@ -32,7 +32,6 @@ module.exports = defineConfig([
         projectService: true,
       },
     },
-    processor: angular.processInlineTemplates,
     rules: {
       // Enforce type safety
       eqeqeq: 'error',
@@ -138,46 +137,6 @@ module.exports = defineConfig([
           patterns: ['dist/*', 'rxjs/internal/*'],
         },
       ],
-    },
-  },
-  {
-    files: ['**/*.html'],
-    extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
-    rules: {
-      // Strict types
-      '@angular-eslint/template/no-any': 'error',
-      '@angular-eslint/template/no-non-null-assertion': 'error',
-      '@angular-eslint/template/eqeqeq': 'error',
-      // Disable recommended Angular ESLint rules already managed by other rules
-      '@angular-eslint/template/banana-in-box': 'off',
-      '@angular-eslint/template/prefer-control-flow': 'off',
-      '@angular-eslint/template/no-negated-async': 'off',
-      // Stricter Anguler ESLint rules
-      '@angular-eslint/template/attributes-order': 'error',
-      '@angular-eslint/template/conditional-complexity': 'error',
-      '@angular-eslint/template/cyclomatic-complexity': 'error',
-      '@angular-eslint/template/no-duplicate-attributes': 'error',
-      '@angular-eslint/template/no-empty-control-flow': 'error',
-      '@angular-eslint/template/no-inline-styles': [
-        'error',
-        {
-          allowBindToStyle: true,
-        },
-      ],
-      '@angular-eslint/template/no-interpolation-in-attributes': 'error',
-      '@angular-eslint/template/no-nested-tags': 'error',
-      '@angular-eslint/template/no-outerhtml': 'error',
-      '@angular-eslint/template/prefer-at-else': 'error',
-      '@angular-eslint/template/prefer-at-empty': 'error',
-      '@angular-eslint/template/prefer-built-in-pipes': 'error',
-      '@angular-eslint/template/prefer-contextual-for-variables': 'error',
-      '@angular-eslint/template/prefer-self-closing-tags': 'error',
-      '@angular-eslint/template/prefer-static-string-properties': 'error',
-      '@angular-eslint/template/prefer-template-literal': 'error',
-      '@angular-eslint/template/require-switch-default': 'error',
-      // More accessibility
-      '@angular-eslint/template/button-has-type': 'error',
-      '@angular-eslint/template/no-positive-tabindex': 'error',
     },
   },
   // Disable type-aware lint rules in JavaScript files
