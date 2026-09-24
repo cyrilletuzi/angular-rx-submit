@@ -29,6 +29,7 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
+    "strictUnclaimedEventNames": true,
     // Additional configuration to enforce standalone components
     "strictStandalone": true,
     // Additional configuration to enforce Angular diagnostics as compilation errors
