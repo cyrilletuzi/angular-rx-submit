@@ -37,6 +37,10 @@ module.exports = defineConfig([
       eqeqeq: 'error',
       'prefer-arrow-callback': 'error',
       'prefer-template': 'error',
+      'no-eval': 'error',
+      'no-new-wrappers': 'error',
+      'no-var': 'error',
+      'prefer-rest-params': 'error',
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/method-signature-style': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
@@ -60,12 +64,46 @@ module.exports = defineConfig([
           allowRegExp: false,
         },
       ],
-      '@typescript-eslint/restrict-template-expressions': 'error',
+      '@typescript-eslint/restrict-template-expressions': [
+        'error',
+        {
+          allow: [],
+          allowAny: false,
+          allowBoolean: false,
+          allowNullish: false,
+          allowNumber: false,
+          allowRegExp: false,
+        },
+      ],
       '@typescript-eslint/strict-boolean-expressions': [
         'error',
-        { allowNumber: false, allowString: false },
+        {
+          allowNumber: false,
+          allowString: false,
+        },
       ],
       '@typescript-eslint/use-unknown-in-catch-callback-variable': 'error',
+      '@typescript-eslint/ban-ts-comment': 'error',
+      '@typescript-eslint/no-array-constructor': 'error',
+      '@typescript-eslint/no-array-delete': 'error',
+      '@typescript-eslint/no-base-to-string': 'error',
+      '@typescript-eslint/no-generated-empty-object-type': 'error',
+      '@typescript-eslint/no-implied-eval': 'error',
+      '@typescript-eslint/no-invalid-void-type': 'error',
+      '@typescript-eslint/no-unsafe-declaration-merging': 'error',
+      '@typescript-eslint/no-unsafe-enum-assignment': 'error',
+      '@typescript-eslint/no-unsafe-function-type': 'error',
+      '@typescript-eslint/no-unsafe-unary-minus': 'error',
+      '@typescript-eslint/no-wrapper-object-types': 'error',
+      '@typescript-eslint/require-array-sort-compare': 'error',
+      '@typescript-eslint/strict-void-return': 'error',
+      '@typescript-eslint/unbound-method': 'error',
+      '@typescript-eslint/no-empty-object-type': [
+        'error',
+        {
+          allowInterfaces: 'with-single-extends',
+        },
+      ],
       // Immutability
       'no-shadow': 'off',
       '@typescript-eslint/no-shadow': 'error',
@@ -88,12 +126,6 @@ module.exports = defineConfig([
         'error',
         {
           allow: ['arrowFunctions'], // some callbacks are required (like in promises `.catch()`), but there is not always something to do inside
-        },
-      ],
-      '@typescript-eslint/no-empty-object-type': [
-        'error',
-        {
-          allowInterfaces: 'with-single-extends',
         },
       ],
       '@typescript-eslint/no-extraneous-class': [
