@@ -1,5 +1,9 @@
 # Changelog
 
+## 22.1.0 (2026-11-19)
+
+- Build with the new Angular 22.3 library builder.
+
 ## 22.0.0 (2026-05-06)
 
 - Angular 22 is required.
